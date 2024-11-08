@@ -81,5 +81,15 @@ def unit_test():
         assert board.isOnBoard(test)
     for test in tests_neg:
         assert not board.isOnBoard(test)
+
+def playTest():
+    board = makeBoard("OATRIHPSHTNRENEI",4,4)
+    while(True):
+        print(board)
+        word = input()
+        print(board.isOnBoard(word))
+
 if __name__ == "__main__":
     unit_test()
+    # playTest()
+    
