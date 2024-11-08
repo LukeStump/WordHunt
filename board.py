@@ -37,7 +37,7 @@ class Board:
         start = tiles[-1]
         adj = self.getAdjacent(start)
         for c in adj:
-            if self.getLetter(c) != rest[0]:
+            if c in tiles or self.getLetter(c) != rest[0]:
                 continue
             if self.searchForRest(rest[1:],tiles[:]+[c]):
                 return True
