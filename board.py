@@ -3,6 +3,12 @@ class Board:
     def __init__(self, letters):
         self.letters = letters
 
+    def __str__(self):
+        b = [" ".join(list(r)) for r in self.letters]
+        sep = "—"*len(b[-1])
+        b = [sep] + b + [sep]
+        return "\n".join(b)
+
     def getLetter(self, coord):
         return self.letters[coord[0]][coord[1]]
     
@@ -30,7 +36,7 @@ class Board:
         start = tiles[-1]
         adj = self.getAdjacent(start)
         for c in adj:
-            if self.getLetter(c) != rest[0]:
+            if c in tiles or self.getLetter(c) != rest[0]:
                 continue
             if self.searchForRest(rest[1:],tiles[:]+[c]):
                 return True
@@ -66,3 +72,22 @@ def makeBoard(letters, rows, columns):
         board[i] = letters[i*columns:(i+1)*columns]
     return Board(board)
 
+def unit_test():
+    board = makeBoard("OATRIHPSHTNRENEI",4,4)
+    tests_pos = ["hit", "ptihnn", "stahp", "that", "pne", "sri", "oat", "ohn", "ohtaitprsnireneh"]
+    tests_neg = ["hine", "thin", "ptz", "jelly", "aot", "tnt", "oatrsrienphtnenio", "oatao"]
+    for test in tests_pos:
+        assert board.isOnBoard(test)
+    for test in tests_neg:
+        assert not board.isOnBoard(test)
+
+def playTest():
+    board = makeBoard("OATRIHPSHTNRENEI",4,4)
+    while(True):
+        print(board)
+        word = input()
+        print(board.isOnBoard(word))
+
+if __name__ == "__main__":
+    unit_test()
+    # playTest()
