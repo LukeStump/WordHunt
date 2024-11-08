@@ -3,6 +3,13 @@ class Board:
     def __init__(self, letters):
         self.letters = letters
 
+    def __str__(self):
+        b = [" ".join(list(r)) for r in self.letters]
+        sep = "—"*len(b[-1])
+        b = [sep] + b + [sep]
+        return "\n".join(b)
+
+
     def getLetter(self, coord):
         return self.letters[coord[0]][coord[1]]
     
