@@ -73,3 +73,13 @@ def makeBoard(letters, rows, columns):
         board[i] = letters[i*columns:(i+1)*columns]
     return Board(board)
 
+def unit_test():
+    board = makeBoard("OATRIHPSHTNRENEI",4,4)
+    tests_pos = ["hit", "ptihnn", "stahp", "that", "pne", "sri", "oat", "ohn", "ohtaitprsnireneh"]
+    tests_neg = ["hine", "thin", "ptz", "jelly", "aot", "tnt", "oatrsrienphtnenio", "oatao"]
+    for test in tests_pos:
+        assert board.isOnBoard(test)
+    for test in tests_neg:
+        assert not board.isOnBoard(test)
+if __name__ == "__main__":
+    unit_test()
