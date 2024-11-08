@@ -9,7 +9,6 @@ class Board:
         b = [sep] + b + [sep]
         return "\n".join(b)
 
-
     def getLetter(self, coord):
         return self.letters[coord[0]][coord[1]]
     
@@ -92,4 +91,3 @@ def playTest():
 if __name__ == "__main__":
     unit_test()
     # playTest()
-    
