@@ -15,6 +15,31 @@ class Game:
         print(self.board)
         word = input("Enter a word: ")
         return word.strip().lower()
+    
+    def scorePlayerInput(self):
+        while True:
+            word = self.getPlayerInput()
+            if len(word) < self.minWordLength:
+                print(f"Too short, must be at least {self.minWordLength} letters long.")
+                continue
+            if not self.board.isOnBoard(word):
+                # penalize guessing random words
+                print("Not on board")
+                return -5
+            points = score(word)
+            if points == None:
+                print("Not in word list")
+                continue
+    
+    def checkGameOver():
+        pass
+
+    def gameOver():
+        pass
+
+            
+        
+    
 
 def score(word):
     """ returns the score of a word based off of its length and rarity
