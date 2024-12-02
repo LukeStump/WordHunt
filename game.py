@@ -24,4 +24,10 @@ def occurs(word, fileName):
     for line in file:
         if word == line.strip():
             return True
+    return False
+
+# testing
+if __name__ == "__main__":
+    while(True):
+        word = input().strip()
         print(score(word))
