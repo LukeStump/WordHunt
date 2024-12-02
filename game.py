@@ -1,11 +1,12 @@
 from board import Board
 from timer import Timer
 class Game:
-    def __init__(self, board, limit):
+    def __init__(self, board, timeLimit = None, minWordLength = 3, scoreLimit = 100):
         ''' input limit is 0 for score-based games, nonzero for timed games '''
         self.board = board
         self.score = 0
-        self.timer = Timer(limit)
+        self.minWordLength = minWordLength
+        self.timer = Timer(timeLimit)
         
     def getPlayerInput(self):
         print(self.board)
