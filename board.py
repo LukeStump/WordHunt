@@ -1,3 +1,4 @@
+import random
 # keeps track of the board state
 class Board:
     def __init__(self, letters):
@@ -72,6 +73,18 @@ def makeBoard(letters, rows, columns):
         board[i] = letters[i*columns:(i+1)*columns]
     return Board(board)
 
+def makeRandomBoard(rows, columns):
+    board = [""]*rows
+    letters = ""
+    for i in range(rows):
+        for j in range(columns):
+            letter = ""
+            while letter in letters:
+                letter = "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
+            letters += letter
+            board[i] += letter
+    return Board(board)
+
 def unit_test():
     board = makeBoard("OATRIHPSHTNRENEI",4,4)
     tests_pos = ["hit", "ptihnn", "stahp", "that", "pne", "sri", "oat", "ohn", "ohtaitprsnireneh"]
@@ -91,3 +104,4 @@ def playTest():
 if __name__ == "__main__":
     unit_test()
     # playTest()
+    print(makeRandomBoard(4, 4))
