@@ -6,9 +6,13 @@ output = open("leaderboard.txt","w")
 output.write(game_seed + player_name + score + "\n")
 
 #^^ Move this into a different file maybe
-d = {} #dictionary
+d = {} #dictionary for specific game_seed, 
+#key = player_name, value = score
 
 "more psuedocode"
+"Create a leaderboard for the respective game_seed from the data of leaderboard.txt"
 for line in output: #get each line from leaderboard.txt
     data = line.split() #split the data of each line
-    if data[0] == (current_seed) #if the seed in the line matches the seed of the current game
+    if data[0] == (current_seed): #if the seed in the line matches the seed of the current game
+        d += data[1] #initialize key
+        data[1] = score #set key value?
