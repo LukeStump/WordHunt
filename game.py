@@ -3,7 +3,7 @@ class Game:
     '''Game class that keeps track of score and timer'''
 
     def __init__(self, limit):
-        ''' limit is 0 for score-based games, nonzero for timed games '''
+        ''' input limit is 0 for score-based games, nonzero for timed games '''
         self.score = 0
         self.time_limit = limit
         self.time_start = 0
