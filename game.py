@@ -16,6 +16,6 @@ class Game:
         ''' if there is a time limit, returns the amount of time left.
             otherwise, returns amount of time passed since game start '''
         if self.time_limit != 0:
-            return self.time_limit - (time.time() - self.timer)
+            return self.time_limit - (time.time() - self.time_start)
         else:
-            return time.time() - self.timer
+            return time.time() - self.time_start
