@@ -6,6 +6,7 @@ output = open("leaderboard.txt","w")
 output.write(game_seed + player_name + score + "\n")
 
 #^^ Move this into a different file maybe
+
 d = {} #dictionary for specific game_seed, 
 #key = player_name, value = score
 
@@ -16,3 +17,5 @@ for line in output: #get each line from leaderboard.txt
     if data[0] == (current_seed): #if the seed in the line matches the seed of the current game
         d += data[1] #initialize key
         data[1] = score #set key value?
+
+    #print all the scores down, 
