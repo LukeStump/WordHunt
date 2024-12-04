@@ -1,4 +1,4 @@
-from board import Board
+import board
 from timer import Timer
 class Game:
     def __init__(self, board, timeLimit = None, minWordLength = 3, scoreLimit = 100):
@@ -72,6 +72,7 @@ def occurs(word, fileName):
 
 # testing
 if __name__ == "__main__":
+    gameBoard = board.makeBoard("OATRIHPSHTNRENEI",4,4)
+    g = Game(gameBoard)
     while(True):
-        word = input().strip()
-        print(score(word))
+        g.getPlayerInput()
