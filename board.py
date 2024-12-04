@@ -78,8 +78,8 @@ def makeRandomBoard(rows, columns):
     letters = ""
     for i in range(rows):
         for j in range(columns):
-            letter = ""
-            while letter in letters:
+            letter = "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
+            while letters.count(letter) >= 2:
                 letter = "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
             letters += letter
             board[i] += letter
