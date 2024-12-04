@@ -90,4 +90,4 @@ def playTest():
 
 if __name__ == "__main__":
     unit_test()
-    # playTest()
+    playTest()

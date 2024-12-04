@@ -1,21 +1,77 @@
-import time
+from board import Board
+from timer import Timer
 class Game:
-    '''Game class that keeps track of score and timer'''
-
-    def __init__(self, limit):
-        ''' input limit is 0 for score-based games, nonzero for timed games '''
+    def __init__(self, board, timeLimit = None, minWordLength = 3, scoreLimit = 100):
+        ''' input limit is None for score-based games, nonzero for timed games '''
+        self.board = board
         self.score = 0
-        self.time_limit = limit
-        self.time_start = 0
+        self.minWordLength = minWordLength
+        self.timer = Timer(timeLimit)
+        
+    def getPlayerInput(self):
+        """ displays the timer and board and returns what the player types in
+        """
+        print(self.timer.get_time())
+        print(self.board)
+        word = input("Enter a word: ")
+        return word.strip().lower()
     
-    def start_time(self):
-        ''' marks current time and stores as self.time_start'''
-        self.time_start = time.time()
+    def scorePlayerInput(self):
+        while True:
+            word = self.getPlayerInput()
+            if len(word) < self.minWordLength:
+                print(f"Too short, must be at least {self.minWordLength} letters long.")
+                continue
+            if not self.board.isOnBoard(word):
+                # penalize guessing random words
+                print("Not on board")
+                return -5
+            points = score(word)
+            if points == None:
+                print("Not in word list")
+                continue
     
-    def get_time(self):
-        ''' if there is a time limit, returns the amount of time left.
-            otherwise, returns amount of time passed since game start '''
-        if self.time_limit != 0:
-            return self.time_limit - (time.time() - self.time_start)
-        else:
-            return time.time() - self.time_start
+    def checkGameOver():
+        """ checks if the requirements for the game to end have been fulfilled
+            calls gameOver if they have
+        """
+        pass
+
+    def gameOver():
+        """ ends the game
+        """
+        pass
+
+            
+        
+    
+
+def score(word):
+    """ returns the score of a word based off of its length and rarity
+        input word: String
+        note that this does not check that it is on the game board
+    """
+    length = len(word)
+    mit = occurs(word.lower(),"mitDictionary.txt")
+    scrabble = occurs(word.upper(), "scrabbleDictionary.txt")
+
+    if not (mit or scrabble):
+        return None
+    
+    # only mit is 2x, only scrabble is 1x, both is 3x
+    multiplier = 2*mit + scrabble
+
+    return length*multiplier
+
+def occurs(word, fileName):
+    file = open(fileName, "r")
+    for line in file:
+        if word == line.strip():
+            return True
+    return False
+
+# testing
+if __name__ == "__main__":
+    while(True):
+        word = input().strip()
+        print(score(word))
