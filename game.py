@@ -32,9 +32,14 @@ class Game:
                 continue
     
     def checkGameOver():
+        """ checks if the requirements for the game to end have been fulfilled
+            calls gameOver if they have
+        """
         pass
 
     def gameOver():
+        """ ends the game
+        """
         pass
 
             
