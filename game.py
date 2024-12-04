@@ -11,7 +11,7 @@ class Game:
     def getPlayerInput(self):
         """ displays the timer and board and returns what the player types in
         """
-        print(self.timer.get_time())
+        print(round(self.timer.get_time(), 1))
         print(self.board)
         word = input("Enter a word: ")
         return word.strip().lower()
@@ -30,6 +30,7 @@ class Game:
             if points == None:
                 print("Not in word list")
                 continue
+            return points
     
     def checkGameOver():
         """ checks if the requirements for the game to end have been fulfilled
