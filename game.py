@@ -8,6 +8,7 @@ class Game:
         self.minWordLength = minWordLength
         self.scoreLimit = scoreLimit
         self.timer = Timer(timeLimit)
+        self.enteredWords = []
         
     def getPlayerInput(self):
         """ displays the timer and board and returns what the player types in
@@ -20,6 +21,10 @@ class Game:
     def scorePlayerInput(self):
         while True:
             word = self.getPlayerInput()
+            if word in self.enteredWords:
+                print("Already entered")
+                continue
+            self.enteredWords += [word]
             if len(word) < self.minWordLength:
                 print(f"Too short, must be at least {self.minWordLength} letters long.")
                 continue
