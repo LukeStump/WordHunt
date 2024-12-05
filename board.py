@@ -9,6 +9,13 @@ class Board:
         sep = "—"*len(b[-1])
         b = [sep] + b + [sep]
         return "\n".join(b)
+    
+    def getAllCoords(self):
+        out = []
+        for r in range(len(self.letters)):
+            for c in range(len(self.letters[r])):
+                out.append((r,c))
+        return out
 
     def getLetter(self, coord):
         return self.letters[coord[0]][coord[1]]
