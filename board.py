@@ -73,14 +73,17 @@ def makeBoard(letters, rows, columns):
         board[i] = letters[i*columns:(i+1)*columns]
     return Board(board)
 
+def getRandomLetter():
+    return "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
+
 def makeRandomBoard(rows, columns):
     board = [""]*rows
     letters = ""
     for i in range(rows):
         for j in range(columns):
-            letter = "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
+            letter = getRandomLetter()
             while letters.count(letter) >= 2:
-                letter = "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
+                letter = getRandomLetter()
             letters += letter
             board[i] += letter
     return Board(board)
