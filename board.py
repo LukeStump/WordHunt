@@ -1,3 +1,4 @@
+import random
 # keeps track of the board state
 class Board:
     def __init__(self, letters):
@@ -70,6 +71,18 @@ def makeBoard(letters, rows, columns):
     board = [""]*rows
     for i in range(rows):
         board[i] = letters[i*columns:(i+1)*columns]
+    return Board(board)
+
+def makeRandomBoard(rows, columns):
+    board = [""]*rows
+    letters = ""
+    for i in range(rows):
+        for j in range(columns):
+            letter = "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
+            while letters.count(letter) >= 2:
+                letter = "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
+            letters += letter
+            board[i] += letter
     return Board(board)
 
 def unit_test():
