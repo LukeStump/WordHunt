@@ -81,13 +81,20 @@ def makeBoard(letters, rows, columns):
         board[i] = letters[i*columns:(i+1)*columns]
     return Board(board)
 
+def generateSeed(length = 8):
+    random.seed()
+    out = ""
+    for i in range(length):
+        out += getRandomLetter()
+    return out
+
 def getRandomLetter():
     # TODO use weights instead
     return "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
 
 def makeRandomBoard(rows, columns, seed: str, maxRepeats = 2):
     assert rows*columns < 26*maxRepeats
-
+    seed = seed.upper()
     random.seed(seed)
 
     # generate random string of letters
@@ -122,7 +129,11 @@ def unit_test():
         assert not boardTrie.exists(test)
 
 def playTest():
-    board = makeBoard("OATRIHPSHTNRENEI",4,4)
+    # board = makeBoard("OATRIHPSHTNRENEI",4,4)
+    # seed = input("seed: ")
+    seed = generateSeed()
+    print("seed:", seed)
+    board = makeRandomBoard(4, 4, seed)
     while(True):
         print(board)
         word = input()
