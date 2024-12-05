@@ -1,3 +1,5 @@
+import random
+import boardSolver
 # keeps track of the board state
 class Board:
     def __init__(self, letters):
@@ -8,6 +10,13 @@ class Board:
         sep = "—"*len(b[-1])
         b = [sep] + b + [sep]
         return "\n".join(b)
+    
+    def getAllCoords(self):
+        out = []
+        for r in range(len(self.letters)):
+            for c in range(len(self.letters[r])):
+                out.append((r,c))
+        return out
 
     def getLetter(self, coord):
         return self.letters[coord[0]][coord[1]]
@@ -72,14 +81,34 @@ def makeBoard(letters, rows, columns):
         board[i] = letters[i*columns:(i+1)*columns]
     return Board(board)
 
+def getRandomLetter():
+    return "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
+
+def makeRandomBoard(rows, columns):
+    board = [""]*rows
+    letters = ""
+    for i in range(rows):
+        for j in range(columns):
+            letter = getRandomLetter()
+            while letters.count(letter) >= 2:
+                letter = getRandomLetter()
+            letters += letter
+            board[i] += letter
+    return Board(board)
+
 def unit_test():
     board = makeBoard("OATRIHPSHTNRENEI",4,4)
     tests_pos = ["hit", "ptihnn", "stahp", "that", "pne", "sri", "oat", "ohn", "ohtaitprsnireneh"]
     tests_neg = ["hine", "thin", "ptz", "jelly", "aot", "tnt", "oatrsrienphtnenio", "oatao"]
+    boardTrie = boardSolver.createBoardTrie(board)
+    wordTrie = boardSolver.getDefaultWordTrie()
     for test in tests_pos:
+        isWord = wordTrie.exists(test)
         assert board.isOnBoard(test)
+        assert boardTrie.exists(test) == isWord
     for test in tests_neg:
         assert not board.isOnBoard(test)
+        assert not boardTrie.exists(test)
 
 def playTest():
     board = makeBoard("OATRIHPSHTNRENEI",4,4)
