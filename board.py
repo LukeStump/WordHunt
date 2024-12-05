@@ -104,11 +104,9 @@ def unit_test():
     wordTrie = boardSolver.getDefaultWordTrie()
     for test in tests_pos:
         isWord = wordTrie.exists(test)
-        print(test, isWord)
         assert board.isOnBoard(test)
         assert boardTrie.exists(test) == isWord
     for test in tests_neg:
-        # print(test)
         assert not board.isOnBoard(test)
         assert not boardTrie.exists(test)
 
