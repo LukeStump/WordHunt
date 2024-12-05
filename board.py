@@ -1,5 +1,5 @@
 import random
-import boardSolver
+from trie import TrieNode, getDefaultWordTrie
 # keeps track of the board state
 class Board:
     def __init__(self, letters):
@@ -81,22 +81,65 @@ def makeBoard(letters, rows, columns):
         board[i] = letters[i*columns:(i+1)*columns]
     return Board(board)
 
+def generateSeed(length = 8):
+    random.seed()
+    out = ""
+    for i in range(length):
+        out += getRandomLetter()
+    return out
+
 def getRandomLetter():
+    # TODO use weights instead
     return "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
 
-def makeRandomBoard(rows, columns):
-    board = [""]*rows
+def makeRandomBoard(rows, columns, seed: str, maxRepeats = 2):
+    assert rows*columns < 26*maxRepeats
+    seed = seed.upper()
+    random.seed(seed)
+
+    # generate random string of letters
     letters = ""
-    for i in range(rows):
-        for j in range(columns):
+    while len(letters) < rows*columns:
+        letter = getRandomLetter()
+        while letters.count(letter) >= maxRepeats:
             letter = getRandomLetter()
-            while letters.count(letter) >= 2:
-                letter = getRandomLetter()
-            letters += letter
-            board[i] += letter
-    return Board(board)
+        letters += letter
+    
+    # shuffle string (for reasons)
+    l = list(letters)
+    random.shuffle(l)
+    letters = "".join(l)
+
+    return makeBoard(letters, rows, columns)
+
+
+
+
+def createBoardTrie(b: Board):
+    outTrie = TrieNode()
+
+    for coord in b.getAllCoords():
+        fillTrie(b,[coord],getDefaultWordTrie(),outTrie)
+
+    return outTrie
+
+def fillTrie(b: Board, coords, wordTrie: TrieNode, boardTrie: TrieNode):
+    """ fills the trie with all possible words starting from coords[-1]
+    """
+
+    for coord in b.getAdjacent(coords[-1]):
+        if coord in coords:
+            continue
+        c = b.getLetter(coord)
+        restWordTrie = wordTrie.getChild(c)
+        if restWordTrie == None:
+            continue
+        restBoardTrie = boardTrie.addNewChild(c, end = restWordTrie.end)
+        fillTrie(b, coords + [coord], restWordTrie, restBoardTrie)
+
 
 def unit_test():
+    import boardSolver
     board = makeBoard("OATRIHPSHTNRENEI",4,4)
     tests_pos = ["hit", "ptihnn", "stahp", "that", "pne", "sri", "oat", "ohn", "ohtaitprsnireneh"]
     tests_neg = ["hine", "thin", "ptz", "jelly", "aot", "tnt", "oatrsrienphtnenio", "oatao"]
@@ -111,7 +154,12 @@ def unit_test():
         assert not boardTrie.exists(test)
 
 def playTest():
-    board = makeBoard("OATRIHPSHTNRENEI",4,4)
+    # import boardSolver
+    # board = makeBoard("OATRIHPSHTNRENEI",4,4)
+    # seed = input("seed: ")
+    seed = "TIOTAESN"#generateSeed()
+    print("seed:", seed)
+    board = makeRandomBoard(4, 4, seed)
     while(True):
         print(board)
         word = input()
