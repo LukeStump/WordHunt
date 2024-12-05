@@ -1,5 +1,4 @@
 import random
-import boardSolver
 # keeps track of the board state
 class Board:
     def __init__(self, letters):
@@ -115,6 +114,7 @@ def makeRandomBoard(rows, columns, seed: str, maxRepeats = 2):
 
 
 def unit_test():
+    import boardSolver
     board = makeBoard("OATRIHPSHTNRENEI",4,4)
     tests_pos = ["hit", "ptihnn", "stahp", "that", "pne", "sri", "oat", "ohn", "ohtaitprsnireneh"]
     tests_neg = ["hine", "thin", "ptz", "jelly", "aot", "tnt", "oatrsrienphtnenio", "oatao"]
@@ -129,6 +129,7 @@ def unit_test():
         assert not boardTrie.exists(test)
 
 def playTest():
+    # import boardSolver
     # board = makeBoard("OATRIHPSHTNRENEI",4,4)
     # seed = input("seed: ")
     seed = generateSeed()
