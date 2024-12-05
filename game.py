@@ -12,7 +12,7 @@ class Game:
     def getPlayerInput(self):
         """ displays the timer and board and returns what the player types in
         """
-        print(round(self.timer.get_time(), 1))
+        print(self.timer.get_time(), 1)
         print(self.board)
         word = input("Enter a word: ")
         return word.strip().lower()
