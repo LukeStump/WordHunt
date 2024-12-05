@@ -82,19 +82,30 @@ def makeBoard(letters, rows, columns):
     return Board(board)
 
 def getRandomLetter():
+    # TODO use weights instead
     return "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
 
-def makeRandomBoard(rows, columns):
-    board = [""]*rows
+def makeRandomBoard(rows, columns, seed: str, maxRepeats = 2):
+    assert rows*columns < 26*maxRepeats
+
+    random.seed(seed)
+
+    # generate random string of letters
     letters = ""
-    for i in range(rows):
-        for j in range(columns):
+    while len(letters) < rows*columns:
+        letter = getRandomLetter()
+        while letters.count(letter) >= maxRepeats:
             letter = getRandomLetter()
-            while letters.count(letter) >= 2:
-                letter = getRandomLetter()
-            letters += letter
-            board[i] += letter
-    return Board(board)
+        letters += letter
+    
+    # shuffle string (for reasons)
+    l = list(letters)
+    random.shuffle(l)
+    letters = "".join(l)
+
+    return makeBoard(letters, rows, columns)
+
+
 
 def unit_test():
     board = makeBoard("OATRIHPSHTNRENEI",4,4)
