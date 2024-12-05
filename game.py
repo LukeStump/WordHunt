@@ -6,6 +6,7 @@ class Game:
         self.board = board
         self.score = 0
         self.minWordLength = minWordLength
+        self.scoreLimit = scoreLimit
         self.timer = Timer(timeLimit)
         
     def getPlayerInput(self):
@@ -32,13 +33,18 @@ class Game:
                 continue
             return points
     
-    def checkGameOver():
+    def checkGameOver(self):
         """ checks if the requirements for the game to end have been fulfilled
             calls gameOver if they have
         """
-        pass
+        if self.timer.is_limited():
+            if self.timer.get_time() <= 0:
+                self.gameOver()
+        else:
+            if self.score >= self.scoreLimit:
+                self.gameOver()
 
-    def gameOver():
+    def gameOver(self):
         """ ends the game
         """
         pass
