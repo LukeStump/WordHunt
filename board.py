@@ -1,4 +1,5 @@
 import random
+from trie import TrieNode, getDefaultWordTrie
 # keeps track of the board state
 class Board:
     def __init__(self, letters):
@@ -113,6 +114,30 @@ def makeRandomBoard(rows, columns, seed: str, maxRepeats = 2):
 
 
 
+
+def createBoardTrie(b: Board):
+    outTrie = TrieNode()
+
+    for coord in b.getAllCoords():
+        fillTrie(b,[coord],getDefaultWordTrie(),outTrie)
+
+    return outTrie
+
+def fillTrie(b: Board, coords, wordTrie: TrieNode, boardTrie: TrieNode):
+    """ fills the trie with all possible words starting from coords[-1]
+    """
+
+    for coord in b.getAdjacent(coords[-1]):
+        if coord in coords:
+            continue
+        c = b.getLetter(coord)
+        restWordTrie = wordTrie.getChild(c)
+        if restWordTrie == None:
+            continue
+        restBoardTrie = boardTrie.addNewChild(c, end = restWordTrie.end)
+        fillTrie(b, coords + [coord], restWordTrie, restBoardTrie)
+
+
 def unit_test():
     import boardSolver
     board = makeBoard("OATRIHPSHTNRENEI",4,4)
@@ -132,7 +157,7 @@ def playTest():
     # import boardSolver
     # board = makeBoard("OATRIHPSHTNRENEI",4,4)
     # seed = input("seed: ")
-    seed = generateSeed()
+    seed = "TIOTAESN"#generateSeed()
     print("seed:", seed)
     board = makeRandomBoard(4, 4, seed)
     while(True):
