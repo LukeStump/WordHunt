@@ -1,4 +1,4 @@
-from board import Board
+import board
 from timer import Timer
 class Game:
     def __init__(self, board, timeLimit = None, minWordLength = 3, scoreLimit = 100):
@@ -6,12 +6,13 @@ class Game:
         self.board = board
         self.score = 0
         self.minWordLength = minWordLength
+        self.scoreLimit = scoreLimit
         self.timer = Timer(timeLimit)
         
     def getPlayerInput(self):
         """ displays the timer and board and returns what the player types in
         """
-        print(self.timer.get_time())
+        print(round(self.timer.get_time(), 1))
         print(self.board)
         word = input("Enter a word: ")
         return word.strip().lower()
@@ -30,14 +31,20 @@ class Game:
             if points == None:
                 print("Not in word list")
                 continue
+            return points
     
-    def checkGameOver():
+    def checkGameOver(self):
         """ checks if the requirements for the game to end have been fulfilled
             calls gameOver if they have
         """
-        pass
+        if self.timer.is_limited():
+            if self.timer.get_time() <= 0:
+                self.gameOver()
+        else:
+            if self.score >= self.scoreLimit:
+                self.gameOver()
 
-    def gameOver():
+    def gameOver(self):
         """ ends the game
         """
         pass
@@ -72,6 +79,7 @@ def occurs(word, fileName):
 
 # testing
 if __name__ == "__main__":
+    gameBoard = board.makeBoard("OATRIHPSHTNRENEI",4,4)
+    g = Game(gameBoard)
     while(True):
-        word = input().strip()
-        print(score(word))
+        g.getPlayerInput()
