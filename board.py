@@ -1,4 +1,5 @@
 import random
+import boardSolver
 # keeps track of the board state
 class Board:
     def __init__(self, letters):
@@ -99,10 +100,17 @@ def unit_test():
     board = makeBoard("OATRIHPSHTNRENEI",4,4)
     tests_pos = ["hit", "ptihnn", "stahp", "that", "pne", "sri", "oat", "ohn", "ohtaitprsnireneh"]
     tests_neg = ["hine", "thin", "ptz", "jelly", "aot", "tnt", "oatrsrienphtnenio", "oatao"]
+    boardTrie = boardSolver.createBoardTrie(board)
+    wordTrie = boardSolver.getDefaultWordTrie()
     for test in tests_pos:
+        isWord = wordTrie.exists(test)
+        print(test, isWord)
         assert board.isOnBoard(test)
+        assert boardTrie.exists(test) == isWord
     for test in tests_neg:
+        # print(test)
         assert not board.isOnBoard(test)
+        assert not boardTrie.exists(test)
 
 def playTest():
     board = makeBoard("OATRIHPSHTNRENEI",4,4)
