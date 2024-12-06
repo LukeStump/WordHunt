@@ -85,7 +85,7 @@ class TrieNode:
             n = self.getChild(c)
             if n == None:
                 continue
-            length += n.getTotalWordLength(orgLen+1)
+            length += n.countTotalWordLength(orgLen+1)
         return length
 
 

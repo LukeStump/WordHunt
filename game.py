@@ -116,7 +116,7 @@ def makeGame(rows, columns, timeLimit=None, scoreLimit=100, minWordLength=3, see
     if seed == None:
         seed = brd.generateSeed()
     b = brd.makeRandomBoard(rows, columns, seed)
-    game = Game(b, seed, timeLimit, minWordLength, scoreLimit)
+    game = Game(b, seed=seed, timeLimit=timeLimit, minWordLength=minWordLength, scoreLimit=scoreLimit)
     return game
 
 def makeGameFromBoardString(boardString: str, timeLimit=None, scoreLimit=100, minWordLength=3):

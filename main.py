@@ -6,8 +6,8 @@ import board
 
 def commandLine():
     # when backend does frontend
-    options()
-    print("yipee")
+    while True:
+        options()
 
 def options():
     opts = [("play random", playRandomGame),("compete",compete),("compete [Host]", competeHost),("solve",solve)]
