@@ -17,14 +17,14 @@ def options():
     opt = opts[opt-1][1]
     opt.__call__()
 
-def getGame(boardString = None):
+def getGame(boardString = None, scoreLimit = 64):
     if boardString == None:
         boardString = input("enter board String:")
     g = None
     if re.match("\w+ \d+x\d+", boardString):
-        g = game.makeGameFromBoardString(boardString, scoreLimit=1)
+        g = game.makeGameFromBoardString(boardString, scoreLimit=scoreLimit)
     else:
-        g = game.makeGame(4,4, scoreLimit=1)
+        g = game.makeGame(4,4, scoreLimit=scoreLimit)
     return g
 
 def playGame(g):
