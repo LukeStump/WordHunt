@@ -3,6 +3,7 @@ import re
 # from game import Game
 import game
 import board
+import dictionaryTrie
 
 def commandLine():
     # when backend does frontend
@@ -10,7 +11,7 @@ def commandLine():
         options()
 
 def options():
-    opts = [("play random", playRandomGame),("compete",compete),("compete [Host]", competeHost),("solve",solve)]
+    opts = [("play random", playRandomGame),("compete",compete),("compete [Host]", competeHost),("solve",solve),("solve [print]",solvePrint),("view board", viewBoard),("check word",checkWord)]
     for i in range(len(opts)):
         print(i+1, opts[i][0])
     opt = int(input(f"[1-{i+1}]:"))
@@ -58,7 +59,24 @@ def solve():
         g.gameOver()
     except game.GameOver:
         pass
+    return trie
+
+def solvePrint():
+    trie = solve()
+    print(trie.getWordList())
+
+def viewBoard():
+    g = getGame()
+    print(g.board)
+    print(g.getBoardString())
+
+def checkWord():
+    word = input("enter word:")
+    print(dictionaryTrie.getDictionaryTrie().exists(word))
 
 
 if __name__ == "__main__":
     commandLine()
+
+#BLOEGLNG 4x4
+#RNNDOXRO 4x4
