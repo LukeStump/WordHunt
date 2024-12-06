@@ -139,12 +139,11 @@ def fillTrie(b: Board, coords, wordTrie: TrieNode, boardTrie: TrieNode):
 
 
 def unit_test():
-    import boardSolver
     board = makeBoard("OATRIHPSHTNRENEI",4,4)
     tests_pos = ["hit", "ptihnn", "stahp", "that", "pne", "sri", "oat", "ohn", "ohtaitprsnireneh"]
     tests_neg = ["hine", "thin", "ptz", "jelly", "aot", "tnt", "oatrsrienphtnenio", "oatao"]
-    boardTrie = boardSolver.createBoardTrie(board)
-    wordTrie = boardSolver.getDictionaryTrie()
+    boardTrie = createBoardTrie(board)
+    wordTrie = getDictionaryTrie()
     for test in tests_pos:
         isWord = wordTrie.exists(test)
         assert board.isOnBoard(test)
@@ -167,6 +166,6 @@ def playTest():
         print(board.isOnBoard(word))
 
 if __name__ == "__main__":
-    getDictionaryTrie()
-    # unit_test()
-    playTest()
+    # getDictionaryTrie()
+    unit_test()
+    # playTest()

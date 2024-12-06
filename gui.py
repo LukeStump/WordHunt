@@ -45,18 +45,15 @@ for i in (my_list):
     word_list.insert(END, i)
 
 #Validation message
-submit = Label(right_frame, height=1,text="", font=('Arial',14),fg="#4f0b12",bg="#9fbded")
-submit.pack(side=tk.TOP, pady=10)
+vali = tk.Label(right_frame, height=1,text="", font=('Arial',14),fg="#4f0b12",bg="#9fbded")
+vali.pack(side=tk.TOP, pady=10)
 
 #Textbox for user input
 input = Text(right_frame, height = 1, width = 16,font=('Arial',30))
 input.insert(tk.END, "")
 input.pack(side=tk.TOP)
 
-#Button to submit word
-submit = Button(right_frame, height=2,width=21,text="Submit", font=('Arial',20))
-submit.pack(side=tk.TOP, pady=10)
-#submit.place(x=486,y=450)
+
 
 
 
@@ -82,5 +79,64 @@ for i in range(grid_size):
 #Score text
 score_dis = tk.Label(left_frame, text = "Score: 0", font=('Arial',30),bg='#9fbded',anchor=tk.NW)
 score_dis.grid(row=left_size-1, columnspan=left_size, pady=10)
+score_dis_score = 0
 #score_dis.place(x=100,y=470)
+
+g.timer.start_time()
+def wordcheck(word):
+    global word_list, score_dis_score
+    word = word.strip().lower()
+    print(word)
+
+    input.delete("1.0", "end")
+    vali.config(text = "")
+    the_time = "Time: " + str(g.timer.get_time())
+    time_dis.config(text = the_time)
+
+    displayText = ""
+
+    if word in g.enteredWords:
+        displayText = "Already entered"
+        # vali.config(text = )
+    else:
+        g.enteredWords += [word]
+        if len(word) < g.minWordLength:
+            displayText = f"Too short, must be at least {g.minWordLength} letters long."
+            # vali.config(text = )
+        elif g.maxWordLength != None and len(word) > g.maxWordLength:
+            displayText = f"Too long, must be at most {g.maxWordLength} letters long."
+            # vali.config(text = 
+        elif not g.board.isOnBoard(word):
+            print("AHHHHHHHH")
+            # penalize guessing random words
+            displayText = "Not on board"
+            # vali.config(text = )
+            score_dis_score -= 5
+            g.score -= 5
+        else:
+            score = game.score(word)
+            if score == None:
+                displayText = "Not in word list"
+                print(word)
+                # vali.config(text = )
+            else:
+                word_list.insert(END, word)
+                score_dis_score += score
+                g.score += score
+    the_score = "Score: " + str(score_dis_score)
+    score_dis.config(text = the_score)
+    print(displayText)
+    vali.config(text = displayText)
+
+def submitButton(event=None):
+    wordcheck(input.get("1.0", "end-1c"))
+
+input.bind("<Return>", submitButton)
+
+#Button to submit word
+submit = Button(right_frame, height=2,width=21,text="Submit", font=('Arial',20),command=submitButton)
+submit.pack(side=tk.TOP, pady=10)
+#submit.place(x=486,y=450)
+
 root.mainloop()
+
