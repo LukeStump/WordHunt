@@ -4,6 +4,7 @@ from trie import TrieNode, getDefaultWordTrie
 class Board:
     def __init__(self, letters):
         self.letters = letters
+        self.trie = createBoardTrie(self)
 
     def __str__(self):
         b = [" ".join(list(r)) for r in self.letters]
@@ -113,8 +114,6 @@ def makeRandomBoard(rows, columns, seed: str, maxRepeats = 2):
     return makeBoard(letters, rows, columns)
 
 
-
-
 def createBoardTrie(b: Board):
     outTrie = TrieNode()
 
@@ -157,14 +156,16 @@ def playTest():
     # import boardSolver
     # board = makeBoard("OATRIHPSHTNRENEI",4,4)
     # seed = input("seed: ")
-    seed = "TIOTAESN"#generateSeed()
+    seed = generateSeed()
     print("seed:", seed)
-    board = makeRandomBoard(4, 4, seed)
+    board = makeRandomBoard(8, 8, seed, 3)
+    print(board.trie.getWordList())
     while(True):
         print(board)
         word = input()
         print(board.isOnBoard(word))
 
 if __name__ == "__main__":
-    unit_test()
+    getDefaultWordTrie()
+    # unit_test()
     playTest()
