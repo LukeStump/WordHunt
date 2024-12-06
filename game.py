@@ -1,7 +1,8 @@
-import board
+import board as brd
 from timer import Timer
+import sys
 class Game:
-    def __init__(self, board, timeLimit = None, minWordLength = 3, maxWordLength = None, scoreLimit = 100):
+    def __init__(self, board, seed=None, timeLimit = None, minWordLength = 3, maxWordLength = None, scoreLimit = 100):
         ''' input limit is None for score-based games, nonzero for timed games '''
         self.board = board
         self.score = 0
@@ -10,17 +11,20 @@ class Game:
         self.scoreLimit = scoreLimit
         self.timer = Timer(timeLimit)
         self.enteredWords = []
+        self.seed = seed
         
     def getPlayerInput(self):
         """ displays the timer and board and returns what the player types in
         """
-        print(self.timer.get_time(), 1)
+        print("time:",self.timer.get_time())
+        print("score:",self.score)
         print(self.board)
         word = input("Enter a word: ")
         return word.strip().lower()
     
     def scorePlayerInput(self):
         while True:
+            self.checkGameOver()
             word = self.getPlayerInput()
             if word in self.enteredWords:
                 print("Already entered")
@@ -43,6 +47,12 @@ class Game:
                 continue
             return points
     
+    def gameLoop(self):
+        self.timer.start_time()
+        while(True):
+            pts = self.scorePlayerInput()
+            self.score += pts
+    
     def checkGameOver(self):
         """ checks if the requirements for the game to end have been fulfilled
             calls gameOver if they have
@@ -57,8 +67,21 @@ class Game:
     def gameOver(self):
         """ ends the game
         """
-        pass
+        print("---- Game Over ----")
+        print(f"score: {self.score}")
+        print(f"time: {self.timer.get_time()}")
+        print(self.getBoardString())
+        print("-------------------")
+        raise GameOver()
+        # sys.exit()
+    
 
+    def getBoardString(self):
+        seedString = "<custom>" if self.seed == None else self.seed
+        return f"{seedString} {self.board.rows}x{self.board.columns}"
+
+class GameOver(Exception):
+    pass
             
         
     
@@ -87,13 +110,31 @@ def occurs(word, fileName):
             return True
     return False
 
+
+
+def makeGame(rows, columns, timeLimit=None, scoreLimit=100, minWordLength=3, seed=None):
+    if seed == None:
+        seed = brd.generateSeed()
+    b = brd.makeRandomBoard(rows, columns, seed)
+    game = Game(b, seed=seed, timeLimit=timeLimit, minWordLength=minWordLength, scoreLimit=scoreLimit)
+    return game
+
+def makeGameFromBoardString(boardString: str, timeLimit=None, scoreLimit=100, minWordLength=3):
+    s = boardString.split(" ")
+    seed = s[0]
+    s = s[1]
+    s = s.split("x")
+    rows = int(s[0])
+    columns = int(s[1])
+    return makeGame(rows, columns, timeLimit, scoreLimit, minWordLength, seed)
+
+
+
 # testing
 if __name__ == "__main__":
-    gameBoard = board.makeBoard("OATRIHPSHTNRENEI",4,4)
-    seed = board.generateSeed()
+    gameBoard = brd.makeBoard("OATRIHPSHTNRENEI",4,4)
+    seed = brd.generateSeed()
     print("seed:", seed)
-    gameBoard = board.makeRandomBoard(4,4,seed)
+    gameBoard = brd.makeRandomBoard(4,4,seed)
     g = Game(gameBoard)
-    g.timer.start_time()
-    while(True):
-        g.scorePlayerInput()
+    g.gameLoop()

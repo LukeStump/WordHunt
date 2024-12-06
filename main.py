@@ -1,14 +1,64 @@
 # The Main file of the Game
-import board
+import re
+# from game import Game
 import game
+import board
 
+def commandLine():
+    # when backend does frontend
+    while True:
+        options()
 
-def playTest():
-    gameBoard = board.makeBoard("OATRIHPSHTNRENEI",4,4)
-    g = game.Game(gameBoard)
+def options():
+    opts = [("play random", playRandomGame),("compete",compete),("compete [Host]", competeHost),("solve",solve)]
+    for i in range(len(opts)):
+        print(i+1, opts[i][0])
+    opt = int(input(f"[1-{i+1}]:"))
+    opt = opts[opt-1][1]
+    opt.__call__()
+
+def getGame(boardString = None, scoreLimit = 64):
+    if boardString == None:
+        boardString = input("enter board String:")
+    g = None
+    if re.match("\w+ \d+x\d+", boardString):
+        g = game.makeGameFromBoardString(boardString, scoreLimit=scoreLimit)
+    else:
+        g = game.makeGame(4,4, scoreLimit=scoreLimit)
+    return g
+
+def playGame(g):
+    try:
+        g.gameLoop()    
+    except game.GameOver:
+        pass
+
+def playRandomGame():
+    g = getGame("")
+    playGame(g)
+
+def competeHost():
+    g = getGame("")
+    print(g.getBoardString())
+    input("press Enter to start")
+    playGame(g)
+
+def compete():
+    g = getGame()
+    print(g.getBoardString())
+    input("press Enter to start")
+    playGame(g)
+
+def solve():
+    g = getGame()
     g.timer.start_time()
-    while(True):
-        v = g.scorePlayerInput()
-        print("--->",v)
+    trie = board.createBoardTrie(g.board)
+    g.score = trie.countTotalWordLength()
+    try:
+        g.gameOver()
+    except game.GameOver:
+        pass
 
-playTest()
+
+if __name__ == "__main__":
+    commandLine()
