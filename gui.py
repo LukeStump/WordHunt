@@ -44,7 +44,8 @@ submit.place(x=486,y=450)
 
 """ create a custom-sized square grid 
 and insert the generated seed into the grid """
-grid_size = 4 #this can be changed
+grid_size = 4 #this can be changed but additional code needs to be done to
+#compensate the window size
 root.columnconfigure(0, weight=0)
 for i in range(grid_size):
     for j in range(grid_size):
