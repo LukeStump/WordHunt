@@ -86,7 +86,6 @@ g.timer.start_time()
 def wordcheck(word):
     global word_list, score_dis_score
     word = word.strip().lower()
-    print(word)
 
     input.delete("1.0", "end")
     vali.config(text = "")
@@ -107,7 +106,6 @@ def wordcheck(word):
             displayText = f"Too long, must be at most {g.maxWordLength} letters long."
             # vali.config(text = 
         elif not g.board.isOnBoard(word):
-            print("AHHHHHHHH")
             # penalize guessing random words
             displayText = "Not on board"
             # vali.config(text = )
@@ -117,7 +115,6 @@ def wordcheck(word):
             score = game.score(word)
             if score == None:
                 displayText = "Not in word list"
-                print(word)
                 # vali.config(text = )
             else:
                 word_list.insert(END, word)
@@ -125,7 +122,6 @@ def wordcheck(word):
                 g.score += score
     the_score = "Score: " + str(score_dis_score)
     score_dis.config(text = the_score)
-    print(displayText)
     vali.config(text = displayText)
 
 def submitButton(event=None):
