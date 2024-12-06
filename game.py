@@ -85,6 +85,10 @@ def occurs(word, fileName):
 # testing
 if __name__ == "__main__":
     gameBoard = board.makeBoard("OATRIHPSHTNRENEI",4,4)
+    seed = board.generateSeed()
+    print("seed:", seed)
+    gameBoard = board.makeRandomBoard(4,4,seed)
     g = Game(gameBoard)
+    g.timer.start_time()
     while(True):
-        g.getPlayerInput()
+        g.scorePlayerInput()
