@@ -27,7 +27,7 @@ time_dis.pack(side=tk.TOP, pady=10, padx=10, anchor=tk.E)
 
 #Scrollbar for found words
 word_list = Listbox(right_frame, width=10,font=("Arial",16), justify="center")
-word_list.pack(side=tk.TOP, expand=True, fill=tk.BOTH, padx=10, pady=10)
+word_list.pack(side=tk.TOP, expand=True, fill=tk.BOTH, padx=10, pady=5)
 # word_list.place(x=600,y=80)
 
 scrollbar1 = tk.Scrollbar(right_frame,orient=VERTICAL)
@@ -37,6 +37,10 @@ mylist = Listbox(right_frame, yscrollcommand = scrollbar1.set )
 scrollbar1.config( command=mylist.yview)   
 for i in (my_list):
     word_list.insert(END, i)
+
+#Validation message
+submit = Label(right_frame, height=1,text="Error: This is a filler message.", font=('Arial',14),fg="#4f0b12",bg="#9fbded")
+submit.pack(side=tk.TOP, pady=10)
 
 #Textbox for user input
 input = Text(right_frame, height = 1, width = 16,font=('Arial',30))
@@ -49,14 +53,11 @@ submit = Button(right_frame, height=2,width=21,text="Submit", font=('Arial',20))
 submit.pack(side=tk.TOP, pady=10)
 #submit.place(x=486,y=450)
 
-#Button to submit word
-# submit = Button(root, height=2,width=21,text="Submit", font=('Arial',20))
-# submit.place(x=486,y=450)
 
 
 """ create a custom-sized square grid 
 and insert the generated seed into the grid """
-grid_size = 20 #this can be changed but additional code needs to be done to
+grid_size = 4 #this can be changed but additional code needs to be done to
 #compensate the window
 left_size = grid_size+2
 for i in range(left_size):
