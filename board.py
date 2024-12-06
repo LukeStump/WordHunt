@@ -1,5 +1,6 @@
 import random
-from trie import TrieNode, getDefaultWordTrie
+from trie import TrieNode #, getDefaultWordTrie
+from dictionaryTrie import getDictionaryTrie
 # keeps track of the board state
 class Board:
     def __init__(self, letters):
@@ -118,7 +119,7 @@ def createBoardTrie(b: Board):
     outTrie = TrieNode()
 
     for coord in b.getAllCoords():
-        fillTrie(b,[coord],getDefaultWordTrie(),outTrie)
+        fillTrie(b,[coord],getDictionaryTrie(),outTrie)
 
     return outTrie
 
@@ -143,7 +144,7 @@ def unit_test():
     tests_pos = ["hit", "ptihnn", "stahp", "that", "pne", "sri", "oat", "ohn", "ohtaitprsnireneh"]
     tests_neg = ["hine", "thin", "ptz", "jelly", "aot", "tnt", "oatrsrienphtnenio", "oatao"]
     boardTrie = boardSolver.createBoardTrie(board)
-    wordTrie = boardSolver.getDefaultWordTrie()
+    wordTrie = boardSolver.getDictionaryTrie()
     for test in tests_pos:
         isWord = wordTrie.exists(test)
         assert board.isOnBoard(test)
@@ -166,6 +167,6 @@ def playTest():
         print(board.isOnBoard(word))
 
 if __name__ == "__main__":
-    getDefaultWordTrie()
+    getDictionaryTrie()
     # unit_test()
     playTest()

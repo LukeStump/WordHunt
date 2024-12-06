@@ -87,11 +87,11 @@ def createTrie(wordList):
     return trie
 
 defaultWordTrie = None
-def getDefaultWordTrie():
-    if defaultWordTrie == None:
-        createDefaultWordTrie()
-    assert defaultWordTrie != None
-    return defaultWordTrie
+# def getDefaultWordTrie():
+#     if defaultWordTrie == None:
+#         createDefaultWordTrie()
+#     assert defaultWordTrie != None
+#     return defaultWordTrie
 
 def createDefaultWordTrie(dicts = ["mitDictionary.txt", "scrabbleDictionary.txt"]):
     global defaultWordTrie
