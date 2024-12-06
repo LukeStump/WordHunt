@@ -5,7 +5,9 @@ from dictionaryTrie import getDictionaryTrie
 class Board:
     def __init__(self, letters):
         self.letters = letters
-        self.trie = createBoardTrie(self)
+        self.rows = len(letters)
+        self.columns = len(letters[0])
+        # self.trie = createBoardTrie(self)
 
     def __str__(self):
         b = [" ".join(list(r)) for r in self.letters]
@@ -94,7 +96,9 @@ def getRandomLetter():
     # TODO use weights instead
     return "AAAAAAAAABBCCDDDDEEEEEEEEEEEEFFGGGHHIIIIIIIIIJKLLLLMMNNNNNNOOOOOOOOPPQRRRRRRSSSSTTTTTTUUUUVVWWXYYZ"[random.randint(0, 97)]
 
-def makeRandomBoard(rows, columns, seed: str, maxRepeats = 2):
+def makeRandomBoard(rows, columns, seed: str, maxRepeats = None):
+    if maxRepeats == None:
+        maxRepeats = int((rows*columns) / 25 + 1)
     assert rows*columns < 26*maxRepeats
     seed = seed.upper()
     random.seed(seed)

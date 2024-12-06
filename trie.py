@@ -76,6 +76,19 @@ class TrieNode:
             words = [c + w for w in words]
             out += words
         return out
+    
+    def countTotalWordLength(self, orgLen = 0):
+        length = 0
+        if self.end:
+            length += orgLen
+        for c in letters:
+            n = self.getChild(c)
+            if n == None:
+                continue
+            length += n.getTotalWordLength(orgLen+1)
+        return length
+
+
 
 
 def createTrie(wordList):
