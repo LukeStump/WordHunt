@@ -1,9 +1,11 @@
 import random
-from trie import TrieNode, getDefaultWordTrie
+from trie import TrieNode #, getDefaultWordTrie
+from dictionaryTrie import getDictionaryTrie
 # keeps track of the board state
 class Board:
     def __init__(self, letters):
         self.letters = letters
+        self.trie = createBoardTrie(self)
 
     def __str__(self):
         b = [" ".join(list(r)) for r in self.letters]
@@ -113,13 +115,11 @@ def makeRandomBoard(rows, columns, seed: str, maxRepeats = 2):
     return makeBoard(letters, rows, columns)
 
 
-
-
 def createBoardTrie(b: Board):
     outTrie = TrieNode()
 
     for coord in b.getAllCoords():
-        fillTrie(b,[coord],getDefaultWordTrie(),outTrie)
+        fillTrie(b,[coord],getDictionaryTrie(),outTrie)
 
     return outTrie
 
@@ -144,7 +144,7 @@ def unit_test():
     tests_pos = ["hit", "ptihnn", "stahp", "that", "pne", "sri", "oat", "ohn", "ohtaitprsnireneh"]
     tests_neg = ["hine", "thin", "ptz", "jelly", "aot", "tnt", "oatrsrienphtnenio", "oatao"]
     boardTrie = boardSolver.createBoardTrie(board)
-    wordTrie = boardSolver.getDefaultWordTrie()
+    wordTrie = boardSolver.getDictionaryTrie()
     for test in tests_pos:
         isWord = wordTrie.exists(test)
         assert board.isOnBoard(test)
@@ -157,14 +157,16 @@ def playTest():
     # import boardSolver
     # board = makeBoard("OATRIHPSHTNRENEI",4,4)
     # seed = input("seed: ")
-    seed = "TIOTAESN"#generateSeed()
+    seed = generateSeed()
     print("seed:", seed)
-    board = makeRandomBoard(4, 4, seed)
+    board = makeRandomBoard(8, 8, seed, 3)
+    print(board.trie.getWordList())
     while(True):
         print(board)
         word = input()
         print(board.isOnBoard(word))
 
 if __name__ == "__main__":
-    unit_test()
+    getDictionaryTrie()
+    # unit_test()
     playTest()

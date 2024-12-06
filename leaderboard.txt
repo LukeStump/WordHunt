@@ -1,1 +1,3 @@
-"""Game_Seed Player_Name Score""" (To store player scores)
+test_seed test_player1 1000
+not_test_seed test_player1 1000
+test_seed test_player2 300
