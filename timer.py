@@ -16,6 +16,19 @@ class Timer:
         ''' if there is a time limit, returns the amount of time left.
             otherwise, returns amount of time passed since game start '''
         if self.is_limited():
-            return self.time_limit - (time.time() - self.time_start)
+            return self.format_time(self.time_limit - (time.time() - self.time_start))
         else:
-            return time.time() - self.time_start
+            return self.format_time(time.time() - self.time_start)
+    
+    def format_time(self, the_time):
+        ''' returns input the_time converted into a minutes:seconds format '''
+        seconds = int(the_time)
+        if seconds >= 60:
+            minutes = seconds // 60
+            seconds %= 60
+        else:
+            minutes = 0
+        if seconds < 10:
+            return str(minutes) + ":0" + str(seconds)
+        else:
+            return str(minutes) + ":" + str(seconds)

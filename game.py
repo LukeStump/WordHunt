@@ -1,18 +1,20 @@
 import board
 from timer import Timer
 class Game:
-    def __init__(self, board, timeLimit = None, minWordLength = 3, scoreLimit = 100):
+    def __init__(self, board, timeLimit = None, minWordLength = 3, maxWordLength = None, scoreLimit = 100):
         ''' input limit is None for score-based games, nonzero for timed games '''
         self.board = board
         self.score = 0
         self.minWordLength = minWordLength
+        self.maxWordLength = maxWordLength
         self.scoreLimit = scoreLimit
         self.timer = Timer(timeLimit)
+        self.enteredWords = []
         
     def getPlayerInput(self):
         """ displays the timer and board and returns what the player types in
         """
-        print(round(self.timer.get_time(), 1))
+        print(self.timer.get_time(), 1)
         print(self.board)
         word = input("Enter a word: ")
         return word.strip().lower()
@@ -20,8 +22,16 @@ class Game:
     def scorePlayerInput(self):
         while True:
             word = self.getPlayerInput()
+            if word in self.enteredWords:
+                print("Already entered")
+                continue
+            self.enteredWords += [word]
             if len(word) < self.minWordLength:
                 print(f"Too short, must be at least {self.minWordLength} letters long.")
+                continue
+            if self.maxWordLength != None:
+                if len(word) > self.maxWordLength:
+                    print(f"Too long, must be at most {self.minWordLength} letters long.")
                 continue
             if not self.board.isOnBoard(word):
                 # penalize guessing random words
