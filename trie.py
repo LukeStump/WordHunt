@@ -1,3 +1,4 @@
+letters = "abcdefghijklmnopqrstuvwxyz"
 class TrieNode:
     def __init__(self, children=None, end = False):
         if children == None:
@@ -62,6 +63,20 @@ class TrieNode:
         if trie == None:
             return False
         return trie.end or not ensureEnd
+    
+    def getWordList(self):
+        out = []
+        if self.end:
+            out = [""]
+        for c in letters:
+            n = self.getChild(c)
+            if n == None:
+                continue
+            words = n.getWordList()
+            words = [c + w for w in words]
+            out += words
+        return out
+
 
 def createTrie(wordList):
     """ returns a Trie that includes exactly the words in wordList
@@ -84,4 +99,5 @@ def createDefaultWordTrie(dicts = ["mitDictionary.txt", "scrabbleDictionary.txt"
     for dict in dicts:
         file = open(dict)
         wordList += file.readlines()
+    wordList = [w for w in wordList if len(w.strip())>=3]
     defaultWordTrie = createTrie(wordList)
