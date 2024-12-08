@@ -11,7 +11,14 @@ class Game:
         self.scoreLimit = scoreLimit
         self.timer = Timer(timeLimit)
         self.enteredWords = []
+        self.correctWords = []
         self.seed = seed
+    
+    def reset(self):
+        self.score = 0
+        self.enteredWords = []
+        self.correctWords = []
+        self.timer = Timer(self.timer.timeLimit)
         
     def getPlayerInput(self):
         """ displays the timer and board and returns what the player types in
@@ -23,6 +30,7 @@ class Game:
         return word.strip().lower()
     
     def scorePlayerInput(self):
+        # outdated
         while True:
             self.checkGameOver()
             word = self.getPlayerInput()
@@ -47,22 +55,72 @@ class Game:
                 continue
             return points
     
+    def enterWord(self, word):
+        """ returns a tuple of (points, message) where points is how many points were earned
+            and message is a string to display to the user
+        """
+        if word in self.enteredWords:
+            return (0, "Already Entered")
+        self.enteredWords.append(word)
+
+        if self.minWordLength != None and len(word) < self.minWordLength:
+            return (0, f"Too short, must be at least {self.minWordLength} letters long.")
+        if self.maxWordLength != None and len(word) > self.maxWordLength:
+            return (0, f"Too long, must be at most {self.minWordLength} letters long.")
+
+        if self.board.trie.exists(word):
+            self.correctWords.append(word)
+            pts = score(word, True)
+            self.score += pts
+            return (pts, "")
+        
+        if self.board.isOnBoard(word):
+            return (0, "Not in word list")
+        
+        # self.score = max(self.score - 5, 0)
+        self.score -= 5
+        return (-5, "Not on Board")
+
+
+    def solve(self):
+        """ finds every possible word and tallies the points
+            returns (points, time) where points is the total points and time is how long it took
+        """
+        self.timer.start_time()
+        words = self.board.trie.getWordList()
+        points = [score(w, True) for w in words]
+        pts = sum(points)
+
+        self.correctWords = words
+        self.score = pts
+
+        return (pts, self.timer.get_time_elapsed())
+
+
+    
     def gameLoop(self):
         self.timer.start_time()
         while(True):
             pts = self.scorePlayerInput()
             self.score += pts
     
+    def isGameOver(self):
+        """ checks if the requirements for the game to end have been fulfilled
+        """
+        if self.timer.is_limited():
+            if self.timer.get_time() <= 0:
+                return True
+        else:
+            if self.score >= self.scoreLimit:
+                return True
+        return False
+    
     def checkGameOver(self):
         """ checks if the requirements for the game to end have been fulfilled
             calls gameOver if they have
         """
-        if self.timer.is_limited():
-            if self.timer.get_time() <= 0:
-                self.gameOver()
-        else:
-            if self.score >= self.scoreLimit:
-                self.gameOver()
+        if self.isGameOver():
+            self.gameOver()
 
     def gameOver(self):
         """ ends the game
@@ -86,20 +144,24 @@ class GameOver(Exception):
         
     
 
-def score(word):
+def score(word, garunteed = False):
+    # TODO make faster (only check MIT? just by length?)
     """ returns the score of a word based off of its length and rarity
         input word: String
         note that this does not check that it is on the game board
     """
+        
     length = len(word)
     mit = occurs(word.lower(),"mitDictionary.txt")
-    scrabble = occurs(word.upper(), "scrabbleDictionary.txt")
 
-    if not (mit or scrabble):
-        return None
+    if not garunteed:
+        scrabble = occurs(word.upper(), "scrabbleDictionary.txt")
+
+        if not (mit or scrabble):
+            return None
     
-    # only mit is 2x, only scrabble is 1x, both is 3x
-    multiplier = 2*mit + scrabble
+    # only scrabble is 1x, mit is 2x
+    multiplier = 2 if mit else 1
 
     return length*multiplier
 
@@ -112,11 +174,11 @@ def occurs(word, fileName):
 
 
 
-def makeGame(rows, columns, timeLimit=None, scoreLimit=100, minWordLength=3, seed=None):
+def makeGame(rows, columns, timeLimit=None, scoreLimit=100, minWordLength=3, maxWordLength = None, seed=None):
     if seed == None:
         seed = brd.generateSeed()
     b = brd.makeRandomBoard(rows, columns, seed)
-    game = Game(b, seed=seed, timeLimit=timeLimit, minWordLength=minWordLength, scoreLimit=scoreLimit)
+    game = Game(b, seed=seed, timeLimit=timeLimit, minWordLength=minWordLength, scoreLimit=scoreLimit, maxWordLength=maxWordLength)
     return game
 
 def makeGameFromBoardString(boardString: str, timeLimit=None, scoreLimit=100, minWordLength=3):
