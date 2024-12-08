@@ -63,7 +63,7 @@ class Game:
 
         if self.board.trie.exists(word):
             self.correctWords.append(word)
-            return (score(word), "")
+            return (score(word, True), "")
         
         if self.board.isOnBoard(word):
             return (0, "Not in word list")
@@ -77,13 +77,13 @@ class Game:
         """
         self.timer.start_time()
         words = self.board.trie.getWordList()
-        points = [score(w) for w in words]
-        score = sum(points)
+        points = [score(w, True) for w in words]
+        pts = sum(points)
 
         self.correctWords = words
-        self.score = score
+        self.score = pts
 
-        return (score, self.timer.get_time_elapsed())
+        return (pts, self.timer.get_time_elapsed())
 
 
     
