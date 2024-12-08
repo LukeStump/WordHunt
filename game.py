@@ -11,6 +11,7 @@ class Game:
         self.scoreLimit = scoreLimit
         self.timer = Timer(timeLimit)
         self.enteredWords = []
+        self.correctWords = []
         self.seed = seed
         
     def getPlayerInput(self):
@@ -53,16 +54,23 @@ class Game:
             pts = self.scorePlayerInput()
             self.score += pts
     
+    def isGameOver(self):
+        """ checks if the requirements for the game to end have been fulfilled
+        """
+        if self.timer.is_limited():
+            if self.timer.get_time() <= 0:
+                return True
+        else:
+            if self.score >= self.scoreLimit:
+                return True
+        return False
+    
     def checkGameOver(self):
         """ checks if the requirements for the game to end have been fulfilled
             calls gameOver if they have
         """
-        if self.timer.is_limited():
-            if self.timer.get_time() <= 0:
-                self.gameOver()
-        else:
-            if self.score >= self.scoreLimit:
-                self.gameOver()
+        if self.isGameOver():
+            self.gameOver()
 
     def gameOver(self):
         """ ends the game
