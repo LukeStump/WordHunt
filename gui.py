@@ -26,6 +26,31 @@ grid_size = 4 #this can be changed but additional code needs to be done to
 gameBoard = board.makeRandomBoard(grid_size,grid_size,board.generateSeed())
 g = game.Game(gameBoard)
 
+
+def enterWord(word):
+    """ called when the player enters a word
+    """
+    pass
+
+def update():
+    """ called to update timer and word lists
+    """
+    pass
+
+def generateSeed():
+    """ called when player clicks "generate seed"
+        generates a new seed and puts it in the seed box
+        (creates new game with that seed?)
+    """
+    pass
+
+def createGame():
+    """ called when player clicks "create game"
+        sets the board to a new board with the supplied proprties
+    """
+    pass
+
+
 #Timer label
 time_dis = tk.Label(right_frame, 
 text = "Time: 0:00", 
