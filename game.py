@@ -72,8 +72,19 @@ class Game:
 
 
     def solve(self):
-        # TODO
-        pass
+        """ finds every possible word and tallies the points
+            returns (points, time) where points is the total points and time is how long it took
+        """
+        self.timer.start_time()
+        words = self.board.trie.getWordList()
+        points = [score(w) for w in words]
+        score = sum(points)
+
+        self.correctWords = words
+        self.score = score
+
+        return (score, self.timer.get_time_elapsed())
+
 
     
     def gameLoop(self):
@@ -123,6 +134,7 @@ class GameOver(Exception):
     
 
 def score(word):
+    # TODO make faster (only check MIT? just by length?)
     """ returns the score of a word based off of its length and rarity
         input word: String
         note that this does not check that it is on the game board
