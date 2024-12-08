@@ -7,7 +7,7 @@ class Board:
         self.letters = letters
         self.rows = len(letters)
         self.columns = len(letters[0])
-        # self.trie = createBoardTrie(self)
+        self.trie = createBoardTrie(self)
 
     def __str__(self):
         b = [" ".join(list(r)) for r in self.letters]
