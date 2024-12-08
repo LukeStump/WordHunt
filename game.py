@@ -174,11 +174,11 @@ def occurs(word, fileName):
 
 
 
-def makeGame(rows, columns, timeLimit=None, scoreLimit=100, minWordLength=3, seed=None):
+def makeGame(rows, columns, timeLimit=None, scoreLimit=100, minWordLength=3, maxWordLength = None, seed=None):
     if seed == None:
         seed = brd.generateSeed()
     b = brd.makeRandomBoard(rows, columns, seed)
-    game = Game(b, seed=seed, timeLimit=timeLimit, minWordLength=minWordLength, scoreLimit=scoreLimit)
+    game = Game(b, seed=seed, timeLimit=timeLimit, minWordLength=minWordLength, scoreLimit=scoreLimit, maxWordLength=maxWordLength)
     return game
 
 def makeGameFromBoardString(boardString: str, timeLimit=None, scoreLimit=100, minWordLength=3):
