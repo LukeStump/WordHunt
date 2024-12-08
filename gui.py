@@ -5,7 +5,7 @@ import tkinter as tk
 from tkinter import *
 root = tk.Tk() #main
 
-w = 900
+w = 1000
 h = 600
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
@@ -16,11 +16,14 @@ root.title("Word Hunt")
 
 left_frame = tk.Frame(master=root, bg="#9fbded")
 left_frame.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
+
 right_frame = tk.Frame(master=root, bg="#9fbded")
 right_frame.pack(side=tk.RIGHT, expand=True, fill=tk.BOTH)
 
 #init
-gameBoard = board.makeRandomBoard(4,4, board.generateSeed())
+grid_size = 4 #this can be changed but additional code needs to be done to
+#compensate the window
+gameBoard = board.makeRandomBoard(grid_size,grid_size,board.generateSeed())
 g = game.Game(gameBoard)
 
 #Timer label
@@ -45,22 +48,16 @@ for i in (my_list):
     word_list.insert(END, i)
 
 #Validation message
-vali = tk.Label(right_frame, height=1,text="", font=('Arial',14),fg="#4f0b12",bg="#9fbded")
+vali = tk.Label(right_frame, height=1,text="Waiting for input", font=('Arial',14),fg="#4f0b12",bg="#7792d4")
 vali.pack(side=tk.TOP, pady=10)
 
 #Textbox for user input
-input = Text(right_frame, height = 1, width = 16,font=('Arial',30))
+input = Text(right_frame, height = 1, width = 14,font=('Arial',30))
 input.insert(tk.END, "")
 input.pack(side=tk.TOP)
 
-
-
-
-
 """ create a custom-sized square grid 
 and insert the generated seed into the grid """
-grid_size = 4 #this can be changed but additional code needs to be done to
-#compensate the window
 left_size = grid_size+2
 for i in range(left_size):
     left_frame.columnconfigure(i, weight=1)
@@ -68,7 +65,8 @@ for i in range(left_size):
 frame_size = 420//grid_size
 pad_size = 20//grid_size
 letter_size = 200//grid_size
-for i in range(grid_size):
+
+for i in range(grid_size): #insert letters into grid
     for j in range(grid_size):
         frame = tk.Frame(left_frame, bg='#d6e6ff', width=frame_size, height=frame_size)
         frame.grid(row=i, column=j+1,padx=pad_size,pady=pad_size)
@@ -82,6 +80,24 @@ score_dis.grid(row=left_size-1, columnspan=left_size, pady=10)
 score_dis_score = 0
 #score_dis.place(x=100,y=470)
 
+#Generate seed
+generate = Text(left_frame,height = 1, width = 15,font=('Arial',14),fg='#9a9a9a')
+generate.insert(tk.END, "Input Seed")
+generate.grid(row=0, column=0, padx=10,pady=1)
+
+#Grid size edit
+gridEdit = Text(left_frame,height = 1, width = 2,font=('Arial',14),fg='#9a9a9a',)
+gridEdit.insert(tk.END, "")
+gridEditText = tk.Label(left_frame, text = "Grid size", font=('Arial',14), bg='#9fbded')
+gridEdit.place(x=100,y=100)
+gridEditText.place(x=10,y=100)
+
+randomSeed = Button(left_frame, height=1,width=15,text="Random Seed", font=('Arial',14)) #command=generateSeed) #Generates a random seed
+randomSeed.place(x=7,y=5)
+
+solve = Button(left_frame, height=1,width=15,text="Solve", font=('Arial',14)) #command=generateSeed) #Generates a random seed
+solve.place(x=7,y=150)
+
 g.timer.start_time()
 def wordcheck(word):
     global word_list, score_dis_score
@@ -92,7 +108,7 @@ def wordcheck(word):
     the_time = "Time: " + str(g.timer.get_time())
     time_dis.config(text = the_time)
 
-    displayText = ""
+    displayText = "Waiting for input"
 
     if word in g.enteredWords:
         displayText = "Already entered"
@@ -117,6 +133,7 @@ def wordcheck(word):
                 displayText = "Not in word list"
                 # vali.config(text = )
             else:
+                displayText = "You found a word"
                 word_list.insert(END, word)
                 score_dis_score += score
                 g.score += score
@@ -127,10 +144,10 @@ def wordcheck(word):
 def submitButton(event=None):
     wordcheck(input.get("1.0", "end-1c"))
 
-input.bind("<Return>", submitButton)
+input.bind("<Return>", submitButton) 
 
 #Button to submit word
-submit = Button(right_frame, height=2,width=21,text="Submit", font=('Arial',20),command=submitButton)
+submit = Button(right_frame, height=2,width=15,text="Submit", font=('Arial',20),command=submitButton)
 submit.pack(side=tk.TOP, pady=10)
 #submit.place(x=486,y=450)
 
