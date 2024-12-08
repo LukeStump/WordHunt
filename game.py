@@ -52,7 +52,16 @@ class Game:
         """ returns a tuple of (points, message) where points is how many points were earned
             and message is a string to display to the user
         """
+        if word in self.enteredWords:
+            return (0, "Already Entered")
+        self.enteredWords.append(word)
+        # TODO
         pass
+
+
+    def solve(self):
+        pass
+        # TODO
 
     
     def gameLoop(self):
