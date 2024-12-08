@@ -133,21 +133,24 @@ class GameOver(Exception):
         
     
 
-def score(word):
+def score(word, garunteed = False):
     # TODO make faster (only check MIT? just by length?)
     """ returns the score of a word based off of its length and rarity
         input word: String
         note that this does not check that it is on the game board
     """
+        
     length = len(word)
     mit = occurs(word.lower(),"mitDictionary.txt")
-    scrabble = occurs(word.upper(), "scrabbleDictionary.txt")
 
-    if not (mit or scrabble):
-        return None
+    if not garunteed:
+        scrabble = occurs(word.upper(), "scrabbleDictionary.txt")
+
+        if not (mit or scrabble):
+            return None
     
-    # only mit is 2x, only scrabble is 1x, both is 3x
-    multiplier = 2*mit + scrabble
+    # only scrabble is 1x, mit is 2x
+    multiplier = 2 if mit else 1
 
     return length*multiplier
 
