@@ -48,6 +48,13 @@ class Game:
                 continue
             return points
     
+    def enterWord(self, word):
+        """ returns a tuple of (points, message) where points is how many points were earned
+            and message is a string to display to the user
+        """
+        pass
+
+    
     def gameLoop(self):
         self.timer.start_time()
         while(True):
