@@ -18,7 +18,7 @@ def options():
     opt = opts[opt-1][1]
     opt.__call__()
 
-def getGame(boardString = None, scoreLimit = 64):
+def getGame(boardString = None, scoreLimit = 32):
     if boardString == None:
         boardString = input("enter board String:")
     g = None
@@ -50,8 +50,9 @@ def compete():
     input("press Enter to start")
     playGame(g)
 
-def solve():
-    g = getGame()
+def solve(g = None):
+    if g == None:
+        g = getGame()
     g.timer.start_time()
     trie = board.createBoardTrie(g.board)
     g.score = trie.countTotalWordLength()
@@ -61,8 +62,8 @@ def solve():
         pass
     return trie
 
-def solvePrint():
-    trie = solve()
+def solvePrint(g = None):
+    trie = solve(g)
     print(trie.getWordList())
 
 def viewBoard():
@@ -77,6 +78,9 @@ def checkWord():
 
 if __name__ == "__main__":
     commandLine()
+    # b = board.makeBoard("ZTGHEIXDPNASFCYO",4,4)
+    # g = game.Game(b)
+    # solvePrint(g)
 
 #BLOEGLNG 4x4
 #RNNDOXRO 4x4
