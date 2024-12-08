@@ -26,7 +26,7 @@ class Timer:
     def get_time_remaining(self):
         return format_time(self.time_limit - (time.time() - self.time_start))
     
-def format_time(self, the_time):
+def format_time(the_time):
     ''' returns input the_time converted into a minutes:seconds format '''
     seconds = int(the_time)
     if seconds >= 60:
