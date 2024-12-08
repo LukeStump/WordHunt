@@ -55,13 +55,25 @@ class Game:
         if word in self.enteredWords:
             return (0, "Already Entered")
         self.enteredWords.append(word)
-        # TODO
-        pass
+
+        if self.minWordLength != None and len(word) < self.minWordLength:
+            return (0, f"Too short, must be at least {self.minWordLength} letters long.")
+        if self.maxWordLength != None and len(word) > self.maxWordLength:
+            return (0, f"Too long, must be at most {self.minWordLength} letters long.")
+
+        if self.board.trie.exists(word):
+            self.correctWords.append(word)
+            return (score(word), "")
+        
+        if self.board.isOnBoard(word):
+            return (0, "Not in word list")
+        
+        return (-5, "Not on Board")
 
 
     def solve(self):
-        pass
         # TODO
+        pass
 
     
     def gameLoop(self):
