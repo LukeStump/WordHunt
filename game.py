@@ -24,6 +24,7 @@ class Game:
         return word.strip().lower()
     
     def scorePlayerInput(self):
+        # outdated
         while True:
             self.checkGameOver()
             word = self.getPlayerInput()
@@ -63,11 +64,15 @@ class Game:
 
         if self.board.trie.exists(word):
             self.correctWords.append(word)
-            return (score(word, True), "")
+            pts = score(word, True)
+            self.score += pts
+            return (pts, "")
         
         if self.board.isOnBoard(word):
             return (0, "Not in word list")
         
+        # self.score = max(self.score - 5, 0)
+        self.score -= 5
         return (-5, "Not on Board")
 
 
