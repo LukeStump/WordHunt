@@ -13,6 +13,12 @@ class Game:
         self.enteredWords = []
         self.correctWords = []
         self.seed = seed
+    
+    def reset(self):
+        self.score = 0
+        self.enteredWords = []
+        self.correctWords = []
+        self.timer = Timer(self.timer.timeLimit)
         
     def getPlayerInput(self):
         """ displays the timer and board and returns what the player types in
