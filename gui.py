@@ -62,7 +62,7 @@ def update():
 
     # update word_list
     word_list.delete(0,END)
-    word_list.insert(END,*g.enteredWords)
+    word_list.insert(END,*g.correctWords)
     pass
 
 def generateSeed():
@@ -72,6 +72,9 @@ def generateSeed():
     """
     newSeed = board.generateSeed()
     # TODO put new seed in gui
+    seedText.delete("1.0","end")
+    seedText.insert(tk.END, newSeed)
+    createGame()
     pass
 
 def createGame():
@@ -80,16 +83,19 @@ def createGame():
     """
     global gameBoard, g
     seed = seedText.get("1.0", "end-1c")
-    size = 4
+    size = int(gridSizeText.get("1.0", "end-1c"))
     # TODO add more vars
     # TODO get vars from gui
     g = game.makeGame(size,size,seed = seed)
     gameBoard = g.board
     updateBoard()
     g.timer.start_time()
+    update()
     pass
 
 def solveBoard():
+    g.solve()
+    update()
     pass
 
 score_dis = ""
@@ -183,11 +189,11 @@ seedText.insert(tk.END, "")
 seedText.grid(row=1, columnspan=4, pady=10)
 
 #Grid size edit
-gridEdit = Text(settings_frame,height = 1, width = 2,font=('Arial',14))
-gridEdit.insert(tk.END, "")
-gridEditText = tk.Label(settings_frame, text = "Grid size:", font=('Arial',14), bg='#9fbded')
-gridEditText.grid(row=2, column=1, pady=10)
-gridEdit.grid(row=2, column=2, pady=10)
+gridSizeText = Text(settings_frame,height = 1, width = 2,font=('Arial',14))
+gridSizeText.insert(tk.END, "4")
+gridSizeLabel = tk.Label(settings_frame, text = "Grid size:", font=('Arial',14), bg='#9fbded')
+gridSizeLabel.grid(row=2, column=1, pady=10)
+gridSizeText.grid(row=2, column=2, pady=10)
 
 #Generate seed
 startGame = Button(settings_frame, height=1,width=15,text="Start Game", font=('Arial',14), command=createGame) #Generates a random seed
