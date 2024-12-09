@@ -92,6 +92,7 @@ class Game:
         points = [score(w, True) for w in words]
         pts = sum(points)
 
+        self.enteredWords = words
         self.correctWords = words
         self.score = pts
 
