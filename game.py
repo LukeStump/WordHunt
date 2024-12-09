@@ -89,6 +89,10 @@ class Game:
         """
         self.timer.start_time()
         words = self.board.trie.getWordList()
+        if self.maxWordLength != None:
+            words = [w for w in words if len(w) >= self.minWordLength and len(w) <= self.maxWordLength]
+        else:
+            words = [w for w in words if len(w) >= self.minWordLength]
         points = [score(w, True) for w in words]
         pts = sum(points)
 
