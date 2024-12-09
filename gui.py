@@ -35,16 +35,18 @@ def enterWord(word):
     """
     result = g.enterWord(word)
     pts = result[0]
-    message = result[1]
-
-    display = message
+    display = result[1]
 
     if pts > 0:
         display += f"\t+{pts}"
     elif pts < 0:
         display += f"\t{pts}"
+    
+    vali.config(text=display)
     # TODO put display in gui (vali)
+    input.delete("1.0","end")
     update()
+
     pass
 
 def update():
@@ -52,7 +54,7 @@ def update():
     """
     # update score
     score = g.score
-    score_dis.config(text=score)
+    score_dis.config(text=f"Score: {score}")
 
     # update timer
     time = g.timer.get_time()
@@ -60,7 +62,7 @@ def update():
 
     # update word_list
     word_list.delete(0,END)
-    word_list.insert(END,g.correctWords)
+    word_list.insert(END,*g.enteredWords)
     pass
 
 def generateSeed():
@@ -76,29 +78,59 @@ def createGame():
     """ called when player clicks "create game"
         sets the board to a new board with the supplied proprties
     """
-    seed = ""
+    global gameBoard, g
+    seed = seedText.get("1.0", "end-1c")
     size = 4
     # TODO add more vars
     # TODO get vars from gui
     g = game.makeGame(size,size,seed = seed)
     gameBoard = g.board
     updateBoard()
+    g.timer.start_time()
     pass
+
+def solveBoard():
+    pass
+
+score_dis = ""
 
 def updateBoard():
     """ updates the display game board grid to be the current gameBoard
     """
-    # TODO
+    global score_dis
+    # clear frame
+    for widget in board_frame.winfo_children():
+        widget.destroy()
+
+    width = gameBoard.columns
+    height = gameBoard.rows
+
+    left_size = width+2
+    for i in range(left_size):
+        board_frame.columnconfigure(i, weight=1)
+        board_frame.rowconfigure(i, weight=1)
+    frame_size = 420//width
+    pad_size = 20//width
+    letter_size = 200//width
+
+    for c in range(width):
+        for r in range(height):
+            frame = tk.Frame(board_frame, bg='#d6e6ff', width=frame_size, height=frame_size)
+            frame.grid(row=r, column=c+1,padx=pad_size,pady=pad_size)
+            letter = gameBoard.getLetter((r,c))
+            label = tk.Label(frame, text=letter, font=('Arial',letter_size))
+            label.place(relwidth=1, relheight=1)
+
+    # TODO move into word_frame and out of this function
+    #Score text
+    score_dis = tk.Label(board_frame, text = "Score: 0", font=('Arial',30),bg='#9fbded',anchor=tk.NW)
+    score_dis.grid(row=left_size-1, columnspan=left_size, pady=10)
     pass
 
 def setup_board():
-    for i in range(grid_size): #insert letters into grid
-        for j in range(grid_size):
-            frame = tk.Frame(board_frame, bg='#d6e6ff', width=frame_size, height=frame_size)
-            frame.grid(row=i, column=j+1,padx=pad_size,pady=pad_size)
-            letter = gameBoard.getLetter((i,j))
-            label = tk.Label(frame, text=letter, font=('Arial',letter_size))
-            label.place(relwidth=1, relheight=1)
+    global gameBoard
+    gameBoard = board.makeBoard("A"*16,4,4)
+    updateBoard()
 
 #Timer label
 time_dis = tk.Label(word_frame, 
@@ -128,100 +160,93 @@ vali.pack(side=tk.TOP, pady=10)
 #Textbox for user input
 input = Text(word_frame, height = 1, width = 14,font=('Arial',30))
 input.insert(tk.END, "")
-input.pack(side=tk.TOP)
+input.pack(side=tk.TOP, pady=10)
 
 """ create a custom-sized square grid 
 and insert the generated seed into the grid """
-left_size = grid_size+2
-for i in range(left_size):
-    board_frame.columnconfigure(i, weight=1)
-    board_frame.rowconfigure(i, weight=1)
-frame_size = 420//grid_size
-pad_size = 20//grid_size
-letter_size = 200//grid_size
+
 
 setup_board()
 
-#Score text
-score_dis = tk.Label(board_frame, text = "Score: 0", font=('Arial',30),bg='#9fbded',anchor=tk.NW)
-score_dis.grid(row=left_size-1, columnspan=left_size, pady=10)
-score_dis_score = 0
+
 #score_dis.place(x=100,y=470)
 
 settings_frame.columnconfigure(0, weight=1)
 settings_frame.columnconfigure(3, weight=1)
 
 #Generate seed
-randomSeed = Button(settings_frame, height=1,width=15,text="Random Seed", font=('Arial',14)) #command=generateSeed) #Generates a random seed
+randomSeed = Button(settings_frame, height=1,width=15,text="Random Seed", font=('Arial',14), command=generateSeed) #Generates a random seed
 randomSeed.grid(row=0, columnspan=4, pady=10)
 
-generate = Text(settings_frame,height = 1, width = 15,font=('Arial',14),fg='#9a9a9a')
-generate.insert(tk.END, "Input Seed")
-generate.grid(row=1, columnspan=4, pady=10)
+seedText = Text(settings_frame,height = 1, width = 15,font=('Arial',14))
+seedText.insert(tk.END, "")
+seedText.grid(row=1, columnspan=4, pady=10)
 
 #Grid size edit
-gridEdit = Text(settings_frame,height = 1, width = 2,font=('Arial',14),fg='#9a9a9a',)
+gridEdit = Text(settings_frame,height = 1, width = 2,font=('Arial',14))
 gridEdit.insert(tk.END, "")
 gridEditText = tk.Label(settings_frame, text = "Grid size:", font=('Arial',14), bg='#9fbded')
 gridEditText.grid(row=2, column=1, pady=10)
 gridEdit.grid(row=2, column=2, pady=10)
 
+#Generate seed
+startGame = Button(settings_frame, height=1,width=15,text="Start Game", font=('Arial',14), command=createGame) #Generates a random seed
+startGame.grid(row=3, columnspan=4, pady=10)
 
-
-solve = Button(settings_frame, height=1,width=15,text="Solve", font=('Arial',14)) #command=generateSeed) #Generates a random seed
-solve.grid(row=3, columnspan=4, pady=10)
+solve = Button(settings_frame, height=1,width=15,text="Solve", font=('Arial',14), command=solveBoard) #Generates a random seed
+solve.grid(row=4, columnspan=4, pady=10)
 
 g.timer.start_time()
-def wordcheck(word):
-    global word_list, score_dis_score
-    word = word.strip().lower()
+# def wordcheck(word):
+#     global word_list, score_dis_score
+#     word = word.strip().lower()
 
-    input.delete("1.0", "end")
-    vali.config(text = "")
-    the_time = "Time: " + str(g.timer.get_time())
-    time_dis.config(text = the_time)
+#     input.delete("1.0", "end")
+#     vali.config(text = "")
+#     the_time = "Time: " + str(g.timer.get_time())
+#     time_dis.config(text = the_time)
 
-    displayText = "Waiting for input"
+#     displayText = "Waiting for input"
 
-    if word in g.enteredWords:
-        displayText = "Already entered"
-        # vali.config(text = )
-    else:
-        g.enteredWords += [word]
-        if len(word) < g.minWordLength:
-            displayText = f"Too short, must be at least {g.minWordLength} letters long."
-            # vali.config(text = )
-        elif g.maxWordLength != None and len(word) > g.maxWordLength:
-            displayText = f"Too long, must be at most {g.maxWordLength} letters long."
-            # vali.config(text = 
-        elif not g.board.isOnBoard(word):
-            # penalize guessing random words
-            displayText = "Not on board"
-            # vali.config(text = )
-            score_dis_score -= 5
-            g.score -= 5
-        else:
-            score = game.score(word)
-            if score == None:
-                displayText = "Not in word list"
-                # vali.config(text = )
-            else:
-                displayText = "You found a word"
-                word_list.insert(END, word)
-                score_dis_score += score
-                g.score += score
-    the_score = "Score: " + str(score_dis_score)
-    score_dis.config(text = the_score)
-    vali.config(text = displayText)
+#     if word in g.enteredWords:
+#         displayText = "Already entered"
+#         # vali.config(text = )
+#     else:
+#         g.enteredWords += [word]
+#         if len(word) < g.minWordLength:
+#             displayText = f"Too short, must be at least {g.minWordLength} letters long."
+#             # vali.config(text = )
+#         elif g.maxWordLength != None and len(word) > g.maxWordLength:
+#             displayText = f"Too long, must be at most {g.maxWordLength} letters long."
+#             # vali.config(text = 
+#         elif not g.board.isOnBoard(word):
+#             # penalize guessing random words
+#             displayText = "Not on board"
+#             # vali.config(text = )
+#             score_dis_score -= 5
+#             g.score -= 5
+#         else:
+#             score = game.score(word)
+#             if score == None:
+#                 displayText = "Not in word list"
+#                 # vali.config(text = )
+#             else:
+#                 displayText = "You found a word"
+#                 word_list.insert(END, word)
+#                 score_dis_score += score
+#                 g.score += score
+#     the_score = "Score: " + str(score_dis_score)
+#     score_dis.config(text = the_score)
+#     vali.config(text = displayText)
 
 def submitButton(event=None):
-    wordcheck(input.get("1.0", "end-1c"))
+    enterWord(input.get("1.0", "end-1c"))
 
 input.bind("<Return>", submitButton) 
 
 #Button to submit word
-submit = Button(word_frame, height=2,width=15,text="Submit", font=('Arial',20),command=submitButton)
-submit.pack(side=tk.TOP, pady=10)
+# submit = Button(word_frame, height=2,width=15,text="Submit", font=('Arial',20),command=submitButton)
+# submit.pack(side=tk.TOP, pady=10)
 #submit.place(x=486,y=450)
 
 root.mainloop()
