@@ -1,3 +1,4 @@
 test_seed test_player1 1000
 not_test_seed test_player1 1000
 test_seed test_player2 300
+test_seed test_player3 3000

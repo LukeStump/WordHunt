@@ -11,7 +11,8 @@ for line in infile: #get each line from leaderboard.txt
     if data[0] == (current_seed): #if the seed in the line matches the seed of the current game
         d[data[1]] = data[2] #add player and score to dictionary
 
+sorted_dict = dict(sorted(d.items(), key=lambda item: item[1]))
 "Testing to see if the code works"
-for i in d:
-    print(i, d[i]) #print all the scores in the window
+for i in sorted_dict:
+    print(i, sorted_dict[i]) #print all the scores in the window
 
