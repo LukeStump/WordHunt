@@ -47,6 +47,17 @@ def enterWord(word):
 def update():
     """ called to update timer and word lists
     """
+    # update score
+    score = g.score
+    score_dis.config(text=score)
+
+    # update timer
+    time = g.timer.get_time()
+    time_dis.config(text=time)
+
+    # update word_list
+    word_list.delete(0,END)
+    word_list.insert(END,g.correctWords)
     pass
 
 def generateSeed():
