@@ -65,9 +65,9 @@ class Game:
         self.enteredWords.append(word)
 
         if self.minWordLength != None and len(word) < self.minWordLength:
-            return (0, f"Too short, must be at least {self.minWordLength} letters long.")
+            return (0, f"Too short, must be ≥{self.minWordLength} letters long.")
         if self.maxWordLength != None and len(word) > self.maxWordLength:
-            return (0, f"Too long, must be at most {self.minWordLength} letters long.")
+            return (0, f"Too long, must be ≤{self.minWordLength} letters long.")
 
         if self.board.trie.exists(word):
             self.correctWords.append(word)

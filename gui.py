@@ -5,8 +5,8 @@ import tkinter as tk
 from tkinter import *
 root = tk.Tk() #main
 
-w = 1000
-h = 600
+w = 1300
+h = 650
 screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 x = (screen_width/2) - (w/2)
@@ -38,7 +38,7 @@ def enterWord(word):
     display = result[1]
 
     if pts > 0:
-        display += f"\t+{pts}"
+        display += f"+{pts}"
     elif pts < 0:
         display += f"\t{pts}"
     
@@ -74,7 +74,6 @@ def generateSeed():
     # TODO put new seed in gui
     seedText.delete("1.0","end")
     seedText.insert(tk.END, newSeed)
-    createGame()
     pass
 
 def createGame():
@@ -83,6 +82,8 @@ def createGame():
     """
     global gameBoard, g
     seed = seedText.get("1.0", "end-1c")
+    seedText.delete("1.0","end")
+    seedText.insert(tk.END, seed)
     size = int(gridSizeText.get("1.0", "end-1c"))
     # TODO add more vars
     # TODO get vars from gui
@@ -97,8 +98,6 @@ def solveBoard():
     g.solve()
     update()
     pass
-
-score_dis = ""
 
 def updateBoard():
     """ updates the display game board grid to be the current gameBoard
@@ -115,22 +114,21 @@ def updateBoard():
     for i in range(left_size):
         board_frame.columnconfigure(i, weight=1)
         board_frame.rowconfigure(i, weight=1)
-    frame_size = 420//width
-    pad_size = 20//width
-    letter_size = 200//width
+    frame_size = 500//width
+    pad_size = 15//width
+    letter_size = 250//width
 
     for c in range(width):
         for r in range(height):
             frame = tk.Frame(board_frame, bg='#d6e6ff', width=frame_size, height=frame_size)
-            frame.grid(row=r, column=c+1,padx=pad_size,pady=pad_size)
+            frame.grid(row=r+1, column=c+1,padx=pad_size,pady=pad_size)
             letter = gameBoard.getLetter((r,c))
             label = tk.Label(frame, text=letter, font=('Arial',letter_size))
             label.place(relwidth=1, relheight=1)
 
     # TODO move into word_frame and out of this function
     #Score text
-    score_dis = tk.Label(board_frame, text = "Score: 0", font=('Arial',30),bg='#9fbded',anchor=tk.NW)
-    score_dis.grid(row=left_size-1, columnspan=left_size, pady=10)
+    score_dis.config(text = "Score: 0")
     pass
 
 def setup_board():
@@ -138,12 +136,18 @@ def setup_board():
     gameBoard = board.makeBoard("A"*16,4,4)
     updateBoard()
 
+#word header for score and time
+word_header_frame = tk.Frame(master=word_frame, bg="#9fbded")
+word_header_frame.pack(side=tk.TOP, fill=tk.BOTH)
+
+word_header_frame.columnconfigure(0, weight=2)
+#score label
+score_dis = tk.Label(word_header_frame, text = "Score: 0", font=('Arial',28),bg='#9fbded', justify="left")
+score_dis.grid(row=0,column=0, pady=10, padx=10, sticky=tk.W)
+
 #Timer label
-time_dis = tk.Label(word_frame, 
-text = "Time: 0:00", 
-font=('Arial',20),bg='#9fbded',
-anchor=tk.NW)
-time_dis.pack(side=tk.TOP, pady=10, padx=10, anchor=tk.E)
+time_dis = tk.Label(word_header_frame, text = "0:00", font=('Arial',28),bg='#9fbded', justify="right")
+time_dis.grid(row = 0, column=1, pady=10, padx=10, sticky=tk.EW)
 #time_dis.place(x=750,y=30)
 
 #Scrollbar for found words
@@ -175,32 +179,48 @@ and insert the generated seed into the grid """
 setup_board()
 
 
-#score_dis.place(x=100,y=470)
-
 settings_frame.columnconfigure(0, weight=1)
+settings_frame.columnconfigure(1, weight=3)
+settings_frame.columnconfigure(2, weight=3)
 settings_frame.columnconfigure(3, weight=1)
 
-#Generate seed
-randomSeed = Button(settings_frame, height=1,width=15,text="Random Seed", font=('Arial',14), command=generateSeed) #Generates a random seed
-randomSeed.grid(row=0, columnspan=4, pady=10)
+#start game
+startGame = Button(settings_frame, text="START GAME", font=('Arial',28), command=createGame) #Generates a random seed
+startGame.grid(row=0, columnspan=4, pady=20)
 
-seedText = Text(settings_frame,height = 1, width = 15,font=('Arial',14))
+seedLabel = tk.Label(settings_frame, text = "Seed:", font=('Arial',20), bg='#9fbded')
+seedText = Text(settings_frame,height = 1, width = 10,font=('Arial',20))
 seedText.insert(tk.END, "")
-seedText.grid(row=1, columnspan=4, pady=10)
+seedLabel.grid(row=1, column=1, pady=10)
+seedText.grid(row=1, column=2, pady=10)
+
+#Generate seed
+randomSeed = Button(settings_frame, text="Generate random seed", font=('Arial',18), command=generateSeed) #Generates a random seed
+randomSeed.grid(row=2, column = 1, columnspan=2)
 
 #Grid size edit
-gridSizeText = Text(settings_frame,height = 1, width = 2,font=('Arial',14))
+gridSizeLabel = tk.Label(settings_frame, text = "Grid size:", font=('Arial',20), bg='#9fbded')
+gridSizeText = Text(settings_frame, height = 1, width = 3,font=('Arial',20))
 gridSizeText.insert(tk.END, "4")
-gridSizeLabel = tk.Label(settings_frame, text = "Grid size:", font=('Arial',14), bg='#9fbded')
-gridSizeLabel.grid(row=2, column=1, pady=10)
-gridSizeText.grid(row=2, column=2, pady=10)
+gridSizeLabel.grid(row=3, column=1, pady=10)
+gridSizeText.grid(row=3, column=2, pady=10)
 
-#Generate seed
-startGame = Button(settings_frame, height=1,width=15,text="Start Game", font=('Arial',14), command=createGame) #Generates a random seed
-startGame.grid(row=3, columnspan=4, pady=10)
+#min word size
+minLengthLabel = tk.Label(settings_frame, text = "Min word length:", font=('Arial',20), bg='#9fbded')
+minLengthText = Text(settings_frame, height = 1, width = 3,font=('Arial',20))
+minLengthText.insert(tk.END, "3")
+minLengthLabel.grid(row=4, column=1, pady=10)
+minLengthText.grid(row=4, column=2, pady=10)
 
-solve = Button(settings_frame, height=1,width=15,text="Solve", font=('Arial',14), command=solveBoard) #Generates a random seed
-solve.grid(row=4, columnspan=4, pady=10)
+#max word size
+maxLengthLabel = tk.Label(settings_frame, text = "Max word length:", font=('Arial',20), bg='#9fbded')
+maxLengthText = Text(settings_frame, height = 1, width = 3,font=('Arial',20))
+maxLengthText.insert(tk.END, "")
+maxLengthLabel.grid(row=5, column=1, pady=10)
+maxLengthText.grid(row=5, column=2, pady=10)
+
+solve = Button(settings_frame, text="Solve board", font=('Arial',20), command=solveBoard) #Generates a random seed
+solve.grid(row=6, columnspan=4, pady=10)
 
 g.timer.start_time()
 # def wordcheck(word):
@@ -256,4 +276,3 @@ input.bind("<Return>", submitButton)
 #submit.place(x=486,y=450)
 
 root.mainloop()
-
