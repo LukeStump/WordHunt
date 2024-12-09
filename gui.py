@@ -50,6 +50,11 @@ def createGame():
     """
     pass
 
+def updateBoard():
+    """ updates the display game board grid to be the current gameBoard
+    """
+    pass
+
 
 #Timer label
 time_dis = tk.Label(right_frame, 
