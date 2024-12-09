@@ -31,8 +31,13 @@ def createDictionaryTrie(dicts = ["mitDictionary.txt", "scrabbleDictionary.txt"]
     for dict in dicts:
         file = open(dict)
         wordList += file.readlines()
-    wordList = [w for w in wordList if len(w.strip())>=3]
-    return trie.createTrie(wordList)
+    wordList = [w.strip() for w in wordList]
+
+    t = trie.createTrie(wordList)
+
+    for w in wordList:
+        assert t.exists(w)
+    return t
 
 def generate(test = True):
     print("Generating...")
