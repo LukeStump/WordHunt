@@ -43,7 +43,7 @@ class Game:
                 continue
             if self.maxWordLength != None:
                 if len(word) > self.maxWordLength:
-                    print(f"Too long, must be at most {self.minWordLength} letters long.")
+                    print(f"Too long, must be at most {self.maxWordLength} letters long.")
                 continue
             if not self.board.isOnBoard(word):
                 # penalize guessing random words
@@ -67,7 +67,7 @@ class Game:
         if self.minWordLength != None and len(word) < self.minWordLength:
             return (0, f"Too short, must be ≥{self.minWordLength} letters long.")
         if self.maxWordLength != None and len(word) > self.maxWordLength:
-            return (0, f"Too long, must be ≤{self.minWordLength} letters long.")
+            return (0, f"Too long, must be ≤{self.maxWordLength} letters long.")
 
         if self.board.trie.exists(word):
             self.correctWords.append(word)
