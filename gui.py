@@ -30,6 +30,18 @@ g = game.Game(gameBoard)
 def enterWord(word):
     """ called when the player enters a word
     """
+    result = g.enterWord(word)
+    pts = result[0]
+    message = result[1]
+
+    display = message
+
+    if pts > 0:
+        display += f"\t+{pts}"
+    elif pts < 0:
+        display += f"\t{pts}"
+    # TODO put display in gui (vali)
+    update()
     pass
 
 def update():
@@ -42,17 +54,27 @@ def generateSeed():
         generates a new seed and puts it in the seed box
         (creates new game with that seed?)
     """
+    newSeed = board.generateSeed()
+    # TODO put new seed in gui
     pass
 
 def createGame():
     """ called when player clicks "create game"
         sets the board to a new board with the supplied proprties
     """
+    seed = ""
+    size = 4
+    # TODO add more vars
+    # TODO get vars from gui
+    g = game.makeGame(size,size,seed = seed)
+    gameBoard = g.board
+    updateBoard()
     pass
 
 def updateBoard():
     """ updates the display game board grid to be the current gameBoard
     """
+    # TODO
     pass
 
 
