@@ -107,6 +107,7 @@ def createGame():
     updateBoard()
     g.timer.start_time()
     input.config(state="normal")
+    input.delete("1.0","end")
     update()
     pass
 
@@ -114,6 +115,7 @@ def solveBoard():
     if g != None:
         g.solve()
         update()
+        endGame()
     pass
 
 def updateBoard():
@@ -179,8 +181,20 @@ def checkEndGame():
     """
     if not g.isGameOver():
         return False
-    pass
+    endGame()
     return True
+
+def endGame():
+    global input, g, timerActive
+    input.delete("1.0","end")
+    if g.timer.is_limited():
+        input.insert(tk.END, "Time's up!")
+    elif g.scoreLimit != None:
+        input.insert(tk.END, "You win!")
+    else:
+        input.insert(tk.END, "Game over")
+    input.config(state="disabled")
+    timerActive = False
 
 #word header for score and time
 word_header_frame = tk.Frame(master=word_frame, bg="#9fbded")
