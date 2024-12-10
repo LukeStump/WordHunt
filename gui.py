@@ -4,7 +4,6 @@ import game
 import time
 import tkinter as tk
 from tkinter import *
-from tkinter import messagebox
 from threading import *
 root = tk.Tk() #main
 
