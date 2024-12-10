@@ -169,9 +169,12 @@ def startButton(event=None):
     t1.start()
 
 def timeThread():
-    while(timerActive):
-        update()
-        time.sleep(1)
+    try:
+        while(timerActive):
+            update()
+            time.sleep(1)
+    except:
+        pass
 
 def checkEndGame():
     """ checks if the game has ended, if it has, end the game and return True
