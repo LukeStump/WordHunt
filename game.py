@@ -88,7 +88,11 @@ class Game:
             returns (points, time) where points is the total points and time is how long it took
         """
         self.timer.start_time()
-        words = self.board.trie.getWordList()
+
+        # redundant but good to include in timing
+        trie = brd.createBoardTrie(self.board)
+        
+        words = trie.getWordList()
         if self.maxWordLength != None:
             words = [w for w in words if len(w) >= self.minWordLength and len(w) <= self.maxWordLength]
         else:
@@ -96,6 +100,7 @@ class Game:
         points = [score(w, True) for w in words]
         pts = sum(points)
 
+        self.enteredWords = words
         self.correctWords = words
         self.score = pts
 
