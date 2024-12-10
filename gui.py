@@ -217,10 +217,10 @@ def checkEndGame():
 def endGame():
     global input, g, timerActive
     input.delete("1.0","end")
-    if g.timer.is_limited():
-        input.insert(tk.END, "Time's up!")
-    elif g.scoreLimit != None:
+    if g.scoreLimit != None and g.score >= g.scoreLimit:
         input.insert(tk.END, "You win!")
+    elif g.timer.is_limited():
+        input.insert(tk.END, "Time's up!")
     else:
         input.insert(tk.END, "Game over")
     input.config(state="disabled")
