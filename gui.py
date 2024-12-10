@@ -35,6 +35,8 @@ g = game.Game(gameBoard)
 def enterWord(word):
     """ called when the player enters a word
     """
+    if checkEndGame(): # ends the game if the requirements are fulfilled
+        return
     result = g.enterWord(word)
     pts = result[0]
     display = result[1]
@@ -65,6 +67,7 @@ def update():
     # update word_list
     word_list.delete(0,END)
     word_list.insert(END,*g.correctWords)
+    checkEndGame()
     pass
 
 def generateSeed():
@@ -154,6 +157,15 @@ def resetSettings():
     minLengthText.delete("1.0","end")
     minLengthText.insert(tk.END, "3")
     maxLengthText.delete("1.0","end")
+
+def checkEndGame():
+    """ checks if the game has ended, if it has, end the game and return True
+        if it has not, return False
+    """
+    if not g.isGameOver():
+        return False
+    pass
+    return True
 
 #word header for score and time
 word_header_frame = tk.Frame(master=word_frame, bg="#9fbded")
