@@ -86,22 +86,42 @@ def createGame():
         sets the board to a new board with the supplied proprties
     """
     global gameBoard, g
+
     seed = seedText.get("1.0", "end-1c")
     if seed == "":
         generateSeed()
         seed = seedText.get("1.0", "end-1c")
     seedText.delete("1.0","end")
     seedText.insert(tk.END, seed)
+
     size = int(gridSizeText.get("1.0", "end-1c"))
+
     minLength = int(minLengthText.get("1.0", "end-1c"))
+
     maxLength = maxLengthText.get("1.0", "end-1c")
     if maxLength == "":
         maxLength = None
     else:
         maxLength = int(maxLength)
-    # TODO add more vars
-    # TODO get vars from gui
-    g = game.makeGame(size,size,minWordLength=minLength, maxWordLength=maxLength, seed = seed)
+
+    limit = gameLimitText.get("1.0", "end-1c")
+    gameMode = gmvariable.get()
+    
+    timeLimit = None
+    scoreLimit = None
+
+    if gameMode == "Score Limit":
+        scoreLimit = int(limit)
+    elif gameMode == "Time Limit":
+        limit = limit.split(":")
+        timeLimit = int(limit[0])*60 + int(limit[1])
+    else:
+        assert gameMode == "Limitless"
+    
+    print(timeLimit)
+    assert type(timeLimit) == type(1) or timeLimit == None
+
+    g = game.makeGame(size,size,minWordLength=minLength, maxWordLength=maxLength, seed = seed, timeLimit=timeLimit, scoreLimit=scoreLimit)
     gameBoard = g.board
     updateBoard()
     g.timer.start_time()
@@ -170,9 +190,12 @@ def startButton(event=None):
     t1.start()
 
 def timeThread():
-    while(timerActive):
-        update()
-        time.sleep(1)
+    try:
+        while(timerActive):
+            update()
+            time.sleep(1)
+    except:
+        pass
 
 def checkEndGame():
     """ checks if the game has ended, if it has, end the game and return True
