@@ -4,7 +4,6 @@ import game
 import time
 import tkinter as tk
 from tkinter import *
-from tkinter import messagebox
 from threading import *
 import leaderboardGui
 root = tk.Tk() #main
@@ -90,26 +89,52 @@ def createGame():
         sets the board to a new board with the supplied proprties
     """
     global gameBoard, g
+
     seed = seedText.get("1.0", "end-1c")
     if seed == "":
         generateSeed()
         seed = seedText.get("1.0", "end-1c")
     seedText.delete("1.0","end")
     seedText.insert(tk.END, seed)
+
     size = int(gridSizeText.get("1.0", "end-1c"))
+
     minLength = int(minLengthText.get("1.0", "end-1c"))
+
     maxLength = maxLengthText.get("1.0", "end-1c")
     if maxLength == "":
         maxLength = None
     else:
         maxLength = int(maxLength)
-    # TODO add more vars
-    # TODO get vars from gui
-    g = game.makeGame(size,size,minWordLength=minLength, maxWordLength=maxLength, seed = seed)
+
+    # limit = gameLimitText.get("1.0", "end-1c")
+    gameMode = gmvariable.get()
+
+
+    
+    timeLimit = timeLimitText.get("1.0", "end-1c")
+    scoreLimit = scoreLimitText.get("1.0", "end-1c")
+
+    if timeLimit == "N/A":
+        timeLimit = None
+    else:
+        limit = timeLimit.split(":")
+        timeLimit = int(limit[0])*60 + int(limit[1])
+    
+    if scoreLimit == "N/A":
+        scoreLimit = None
+    else:
+        scoreLimit = int(scoreLimit)
+    
+    # print(timeLimit)
+    assert type(timeLimit) == type(1) or timeLimit == None
+
+    g = game.makeGame(size,size,minWordLength=minLength, maxWordLength=maxLength, seed = seed, timeLimit=timeLimit, scoreLimit=scoreLimit)
     gameBoard = g.board
     updateBoard()
     g.timer.start_time()
     input.config(state="normal")
+    input.delete("1.0","end")
     update()
     pass
 
@@ -117,6 +142,7 @@ def solveBoard():
     if g != None:
         g.solve()
         update()
+        endGame()
     pass
 
 def updateBoard():
@@ -172,9 +198,12 @@ def startButton(event=None):
     t1.start()
 
 def timeThread():
-    while(timerActive):
-        update()
-        time.sleep(1)
+    try:
+        while(timerActive):
+            update()
+            time.sleep(1)
+    except:
+        pass
 
 def checkEndGame():
     """ checks if the game has ended, if it has, end the game and return True
@@ -182,8 +211,20 @@ def checkEndGame():
     """
     if not g.isGameOver():
         return False
-    pass
+    endGame()
     return True
+
+def endGame():
+    global input, g, timerActive
+    input.delete("1.0","end")
+    if g.timer.is_limited():
+        input.insert(tk.END, "Time's up!")
+    elif g.scoreLimit != None:
+        input.insert(tk.END, "You win!")
+    else:
+        input.insert(tk.END, "Game over")
+    input.config(state="disabled")
+    timerActive = False
 
 #word header for score and time
 word_header_frame = tk.Frame(master=word_frame, bg="#9fbded")
@@ -241,77 +282,92 @@ startGame = Button(settings_frame, text="START GAME", font=('Arial',28), command
 startGame.grid(row=1, columnspan=4, pady=10)
 
 solve = Button(settings_frame, text="Solve board", font=('Arial',20), command=solveBoard) #Generates a random seed
-solve.grid(row=2, columnspan=4, pady=20)
+solve.grid(row=2, columnspan=4, pady=(0,10))
 
 settingsLabel = tk.Label(settings_frame, text = "----- Settings -----", font=('Arial',24), bg='#9fbded')
 settingsLabel.grid(row=3, column=1, columnspan=2, pady=10)
 
 def changeGameMode(event=None):
     global gmvariable
-    gameLimitText.config(state="normal")
-    gameLimitText.delete("1.0","end")
-    if gmvariable.get() == "Score Limit":
-        gameLimitLabel.config(text = "Score Limit:")
-        gameLimitText.insert(tk.END, "100")
+    scoreLimitText.config(state="normal")
+    timeLimitText.config(state="normal")
+    scoreLimitText.delete("1.0","end")
+    timeLimitText.delete("1.0","end")
+    if gmvariable.get() == "Limitless":
+        scoreLimitText.insert(tk.END, "N/A")
+        timeLimitText.insert(tk.END, "N/A")
+        scoreLimitText.config(state="disabled")
+        timeLimitText.config(state="disabled")
+    elif gmvariable.get() == "Score Limit":
+        scoreLimitText.insert(tk.END, "100")
+        timeLimitText.insert(tk.END, "N/A")
+        timeLimitText.config(state="disabled")
     elif gmvariable.get() == "Time Limit":
-        gameLimitLabel.config(text = "Time Limit:")
-        gameLimitText.insert(tk.END, "3:00")
-    elif gmvariable.get() == "Limitless":
-        gameLimitLabel.config(text = "")
-        gameLimitText.insert(tk.END, "N/A")
-        gameLimitText.config(state="disabled")
+        scoreLimitText.insert(tk.END, "N/A")
+        scoreLimitText.config(state="disabled")
+        timeLimitText.insert(tk.END, "3:00")
+    elif gmvariable.get() == "Double Limit":
+        scoreLimitText.insert(tk.END, "100")
+        timeLimitText.insert(tk.END, "3:00")
     pass
 
 gmvariable = StringVar()
 gmvariable.set("Limitless")
 gameModeLabel = tk.Label(settings_frame, text = "Gamemode:", font=('Arial',20), bg='#9fbded')
-gameModeMenu = OptionMenu(settings_frame, gmvariable, *["Limitless", "Score Limit", "Time Limit"], command=changeGameMode)
+gameModeMenu = OptionMenu(settings_frame, gmvariable, *["Limitless", "Score Limit", "Time Limit", "Double Limit"], command=changeGameMode)
 gameModeLabel.grid(row=4, column=1, pady=10)
 gameModeMenu.config(height=1, width=10)
 gameModeMenu.grid(row=4, column=2, pady=10)
 
-gameLimitLabel = tk.Label(settings_frame, text = "", font=('Arial',20), bg='#9fbded')
-gameLimitText = Text(settings_frame,height = 1, width = 5,font=('Arial',20))
-gameLimitText.insert(tk.END, "N/A")
-gameLimitText.config(state="disabled")
-gameLimitLabel.grid(row=5, column=1, pady=10)
-gameLimitText.grid(row=5, column=2, pady=10)
+scoreLimitLabel = tk.Label(settings_frame, text = "Score Limit:", font=('Arial',20), bg='#9fbded')
+scoreLimitText = Text(settings_frame,height = 1, width = 5,font=('Arial',20))
+scoreLimitText.insert(tk.END, "N/A")
+scoreLimitText.config(state="disabled")
+scoreLimitLabel.grid(row=5, column=1)
+scoreLimitText.grid(row=5, column=2)
+
+timeLimitLabel = tk.Label(settings_frame, text = "Time Limit:", font=('Arial',20), bg='#9fbded')
+timeLimitText = Text(settings_frame,height = 1, width = 5,font=('Arial',20))
+timeLimitText.insert(tk.END, "N/A")
+timeLimitText.config(state="disabled")
+timeLimitLabel.grid(row=6, column=1, pady=10)
+timeLimitText.grid(row=6, column=2, pady=10)
 
 seedLabel = tk.Label(settings_frame, text = "Seed:", font=('Arial',20), bg='#9fbded')
 seedText = Text(settings_frame,height = 1, width = 10,font=('Arial',20))
 seedText.insert(tk.END, "")
-seedLabel.grid(row=6, column=1, pady=10)
-seedText.grid(row=6, column=2, pady=10)
+seedLabel.grid(row=7, column=1, pady=10)
+seedText.grid(row=7, column=2, pady=10)
 
 #Generate seed
 randomSeed = Button(settings_frame, text="Generate random seed", font=('Arial',18), command=generateSeed) #Generates a random seed
-randomSeed.grid(row=7, column = 1, columnspan=2)
+randomSeed.grid(row=8, column = 1, columnspan=2, pady=(0, 10))
 
 #Grid size edit
 gridSizeLabel = tk.Label(settings_frame, text = "Grid size:", font=('Arial',20), bg='#9fbded')
 gridSizeText = Text(settings_frame, height = 1, width = 3,font=('Arial',20))
 gridSizeText.insert(tk.END, "4")
-gridSizeLabel.grid(row=8, column=1, pady=10)
-gridSizeText.grid(row=8, column=2, pady=10)
+gridSizeLabel.grid(row=9, column=1, pady=10)
+gridSizeText.grid(row=9, column=2, pady=10)
 
 #min word size
 minLengthLabel = tk.Label(settings_frame, text = "Min word length:", font=('Arial',20), bg='#9fbded')
 minLengthText = Text(settings_frame, height = 1, width = 3,font=('Arial',20))
 minLengthText.insert(tk.END, "3")
-minLengthLabel.grid(row=9, column=1, pady=10)
-minLengthText.grid(row=9, column=2, pady=10)
+minLengthLabel.grid(row=10, column=1)
+minLengthText.grid(row=10, column=2)
 
 #max word size
 maxLengthLabel = tk.Label(settings_frame, text = "Max word length:", font=('Arial',20), bg='#9fbded')
 maxLengthText = Text(settings_frame, height = 1, width = 3,font=('Arial',20))
 maxLengthText.insert(tk.END, "")
-maxLengthLabel.grid(row=10, column=1, pady=10)
-maxLengthText.grid(row=10, column=2, pady=10)
+maxLengthLabel.grid(row=11, column=1, pady=10)
+maxLengthText.grid(row=11, column=2, pady=10)
 
 reset = Button(settings_frame, text="Set to default", font=('Arial',20), command=resetSettings) #Generates a random seed
-reset.grid(row=11, columnspan=4, pady=10)
+reset.grid(row=12, columnspan=4, pady=10)
 
-settings_frame.rowconfigure(12, weight=2)
+settings_frame.rowconfigure(13, weight=2)
 
 def submitButton(event=None):
     enterWord(input.get("1.0", "end-1c"))

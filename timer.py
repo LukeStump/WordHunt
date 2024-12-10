@@ -12,19 +12,25 @@ class Timer:
         ''' marks current time and stores as self.time_start'''
         self.time_start = time.time()
     
-    def get_time(self):
+    def get_time(self, raw=False):
         ''' if there is a time limit, returns the amount of time left.
             otherwise, returns amount of time passed since game start '''
         if self.is_limited():
-            return self.get_time_remaining()
+            return self.get_time_remaining(raw=raw)
         else:
-            return self.get_time_elapsed()
+            return self.get_time_elapsed(raw=raw)
     
-    def get_time_elapsed(self):
-        return format_time(time.time() - self.time_start)
+    def get_time_elapsed(self, raw=False):
+        t = time.time() - self.time_start
+        if not raw:
+            t = format_time(t)
+        return t
 
-    def get_time_remaining(self):
-        return format_time(self.time_limit - (time.time() - self.time_start))
+    def get_time_remaining(self, raw=False):
+        t = self.time_limit - (time.time() - self.time_start)
+        if not raw:
+            t = format_time(t)
+        return t
     
 def format_time(the_time):
     ''' returns input the_time converted into a minutes:seconds format '''

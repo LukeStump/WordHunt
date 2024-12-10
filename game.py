@@ -2,7 +2,7 @@ import board as brd
 from timer import Timer
 import sys
 class Game:
-    def __init__(self, board, seed=None, timeLimit = None, minWordLength = 3, maxWordLength = None, scoreLimit = 100):
+    def __init__(self, board, seed=None, timeLimit = None, minWordLength = 3, maxWordLength = None, scoreLimit = None):
         ''' input limit is None for score-based games, nonzero for timed games '''
         self.board = board
         self.score = 0
@@ -118,9 +118,9 @@ class Game:
         """ checks if the requirements for the game to end have been fulfilled
         """
         if self.timer.is_limited():
-            if self.timer.get_time() <= 0:
+            if self.timer.get_time(True) <= 0:
                 return True
-        else:
+        if self.scoreLimit != None:
             if self.score >= self.scoreLimit:
                 return True
         return False
