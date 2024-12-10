@@ -160,6 +160,7 @@ word_header_frame = tk.Frame(master=word_frame, bg="#9fbded")
 word_header_frame.pack(side=tk.TOP, fill=tk.BOTH)
 
 word_header_frame.columnconfigure(0, weight=2)
+
 #score label
 score_dis = tk.Label(word_header_frame, text = "Score: 0", font=('Arial',28),bg='#9fbded', justify="left")
 score_dis.grid(row=0,column=0, pady=10, padx=10, sticky=tk.W)
