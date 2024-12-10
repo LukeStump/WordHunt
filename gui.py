@@ -1,9 +1,11 @@
 #written on a separate file for now
 import board 
 import game
+import time
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
+from threading import *
 root = tk.Tk() #main
 
 w = 1300
@@ -26,11 +28,9 @@ word_frame = tk.Frame(master=root, bg="#9fbded")
 word_frame.pack(side=tk.RIGHT, expand=True, fill=tk.BOTH)
 
 #init
-grid_size = 4 #this can be changed but additional code needs to be done to
-#compensate the window
-gameBoard = board.makeRandomBoard(grid_size,grid_size,board.generateSeed())
-g = game.Game(gameBoard)
-
+gameBoard = None
+g = None
+timerActive = False
 
 def enterWord(word):
     """ called when the player enters a word
@@ -56,17 +56,18 @@ def enterWord(word):
 def update():
     """ called to update timer and word lists
     """
-    # update score
-    score = g.score
-    score_dis.config(text=f"Score: {score}")
+    if g != None:
+        # update score
+        score = g.score
+        score_dis.config(text=f"Score: {score}")
 
-    # update timer
-    time = g.timer.get_time()
-    time_dis.config(text=time)
+        # update timer
+        time = g.timer.get_time()
+        time_dis.config(text=time)
 
-    # update word_list
-    word_list.delete(0,END)
-    word_list.insert(END,*g.correctWords)
+        # update word_list
+        word_list.delete(0,END)
+        word_list.insert(END,*g.correctWords)
     checkEndGame()
     pass
 
@@ -105,12 +106,14 @@ def createGame():
     gameBoard = g.board
     updateBoard()
     g.timer.start_time()
+    input.config(state="normal")
     update()
     pass
 
 def solveBoard():
-    g.solve()
-    update()
+    if g != None:
+        g.solve()
+        update()
     pass
 
 def updateBoard():
@@ -158,6 +161,18 @@ def resetSettings():
     minLengthText.insert(tk.END, "3")
     maxLengthText.delete("1.0","end")
 
+def startButton(event=None):
+    global timerActive
+    createGame()
+    timerActive = True
+    t1=Thread(target=timeThread)
+    t1.start()
+
+def timeThread():
+    while(timerActive):
+        update()
+        time.sleep(1)
+
 def checkEndGame():
     """ checks if the game has ended, if it has, end the game and return True
         if it has not, return False
@@ -204,6 +219,7 @@ vali.pack(side=tk.TOP, pady=10)
 input = Text(word_frame, height = 1, width = 14,font=('Arial',30))
 input.insert(tk.END, "")
 input.pack(side=tk.TOP, pady=10)
+input.config(state="disabled")
 
 """ create a custom-sized square grid 
 and insert the generated seed into the grid """
@@ -219,7 +235,7 @@ settings_frame.columnconfigure(3, weight=1)
 settings_frame.rowconfigure(0, weight=1)
 
 #start game
-startGame = Button(settings_frame, text="START GAME", font=('Arial',28), command=createGame) #Generates a random seed
+startGame = Button(settings_frame, text="START GAME", font=('Arial',28), command=startButton) #Generates a random seed
 startGame.grid(row=1, columnspan=4, pady=10)
 
 solve = Button(settings_frame, text="Solve board", font=('Arial',20), command=solveBoard) #Generates a random seed
@@ -230,6 +246,7 @@ settingsLabel.grid(row=3, column=1, columnspan=2, pady=10)
 
 def changeGameMode(event=None):
     global gmvariable
+    gameLimitText.config(state="normal")
     gameLimitText.delete("1.0","end")
     if gmvariable.get() == "Score Limit":
         gameLimitLabel.config(text = "Score Limit:")
@@ -240,19 +257,21 @@ def changeGameMode(event=None):
     elif gmvariable.get() == "Limitless":
         gameLimitLabel.config(text = "")
         gameLimitText.insert(tk.END, "N/A")
+        gameLimitText.config(state="disabled")
     pass
 
 gmvariable = StringVar()
-gmvariable.set("Score Limit")
+gmvariable.set("Limitless")
 gameModeLabel = tk.Label(settings_frame, text = "Gamemode:", font=('Arial',20), bg='#9fbded')
-gameModeMenu = OptionMenu(settings_frame, gmvariable, *["Score Limit", "Time Limit", "Limitless"], command=changeGameMode)
+gameModeMenu = OptionMenu(settings_frame, gmvariable, *["Limitless", "Score Limit", "Time Limit"], command=changeGameMode)
 gameModeLabel.grid(row=4, column=1, pady=10)
 gameModeMenu.config(height=1, width=10)
 gameModeMenu.grid(row=4, column=2, pady=10)
 
-gameLimitLabel = tk.Label(settings_frame, text = "Score Limit:", font=('Arial',20), bg='#9fbded')
+gameLimitLabel = tk.Label(settings_frame, text = "", font=('Arial',20), bg='#9fbded')
 gameLimitText = Text(settings_frame,height = 1, width = 5,font=('Arial',20))
-gameLimitText.insert(tk.END, "100")
+gameLimitText.insert(tk.END, "N/A")
+gameLimitText.config(state="disabled")
 gameLimitLabel.grid(row=5, column=1, pady=10)
 gameLimitText.grid(row=5, column=2, pady=10)
 
@@ -292,7 +311,51 @@ reset.grid(row=11, columnspan=4, pady=10)
 
 settings_frame.rowconfigure(12, weight=2)
 
+<<<<<<< HEAD
 g.timer.start_time()
+=======
+# def wordcheck(word):
+#     global word_list, score_dis_score
+#     word = word.strip().lower()
+
+#     input.delete("1.0", "end")
+#     vali.config(text = "")
+#     the_time = "Time: " + str(g.timer.get_time())
+#     time_dis.config(text = the_time)
+
+#     displayText = "Waiting for input"
+
+#     if word in g.enteredWords:
+#         displayText = "Already entered"
+#         # vali.config(text = )
+#     else:
+#         g.enteredWords += [word]
+#         if len(word) < g.minWordLength:
+#             displayText = f"Too short, must be at least {g.minWordLength} letters long."
+#             # vali.config(text = )
+#         elif g.maxWordLength != None and len(word) > g.maxWordLength:
+#             displayText = f"Too long, must be at most {g.maxWordLength} letters long."
+#             # vali.config(text = 
+#         elif not g.board.isOnBoard(word):
+#             # penalize guessing random words
+#             displayText = "Not on board"
+#             # vali.config(text = )
+#             score_dis_score -= 5
+#             g.score -= 5
+#         else:
+#             score = game.score(word)
+#             if score == None:
+#                 displayText = "Not in word list"
+#                 # vali.config(text = )
+#             else:
+#                 displayText = "You found a word"
+#                 word_list.insert(END, word)
+#                 score_dis_score += score
+#                 g.score += score
+#     the_score = "Score: " + str(score_dis_score)
+#     score_dis.config(text = the_score)
+#     vali.config(text = displayText)
+>>>>>>> main
 
 def submitButton(event=None):
     enterWord(input.get("1.0", "end-1c"))
