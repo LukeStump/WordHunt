@@ -1,3 +1,4 @@
+
 #Compiles all of the scores of the specific seed into a dictionary which will then be used for leaderboardGui.py
 "Variables"
 infile = open("leaderboard.txt","r", encoding='utf-8')

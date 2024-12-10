@@ -5,7 +5,7 @@ import time
 import tkinter as tk
 from tkinter import *
 from threading import *
-import leaderboardGui
+import leaderboard
 root = tk.Tk() #main
 
 w = 1300
@@ -225,7 +225,36 @@ def endGame():
         input.insert(tk.END, "Game over")
     input.config(state="disabled")
     timerActive = False
+    openNewWindow()
 
+
+#class Window(Frame):
+    #Opens the leaderboard on command
+def openNewWindow():
+    leaderboardgui = Toplevel() #main
+    leaderboardgui.geometry = ("400x600")
+    leaderboardgui.title("Leaderboard")
+
+    "Get data from game"
+    seed = g.seed
+    dict = leaderboard.sorted_dict
+
+    "GUI"
+    #Title
+    title = tk.Label(leaderboardgui, height = 1, width = 14,text="Leaderboard",font=('Arial',30))
+    title.pack(side=tk.TOP, pady=10)
+    seed = tk.Label(leaderboardgui, height = 1, width = 14,text=f"Seed: {seed}",font=('Arial',18))
+    seed.pack(side=tk.TOP, pady=5)
+
+    #List
+    score_list = tk.Listbox(leaderboardgui, height = 20, width = 30,font=('Arial',15),justify="center")
+    score_list.pack(side=tk.TOP, pady=10)
+
+    #Add scores to list
+    for i in dict:
+        score_list.insert(END,i + " " + str(dict[i]))
+
+        
 #word header for score and time
 word_header_frame = tk.Frame(master=word_frame, bg="#9fbded")
 word_header_frame.pack(side=tk.TOP, fill=tk.BOTH)
@@ -374,6 +403,5 @@ def submitButton(event=None):
 
 input.bind("<Return>", submitButton) 
 
-#outfile.write(g.seed + " Anonymous " + g.score) #Write to leaderboard.txt
 
 root.mainloop()
