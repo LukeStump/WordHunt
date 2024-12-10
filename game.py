@@ -118,9 +118,9 @@ class Game:
         """ checks if the requirements for the game to end have been fulfilled
         """
         if self.timer.is_limited():
-            if self.timer.get_time() <= 0:
+            if self.timer.get_time(True) <= 0:
                 return True
-        else:
+        if self.scoreLimit != None:
             if self.score >= self.scoreLimit:
                 return True
         return False
