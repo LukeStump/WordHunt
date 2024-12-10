@@ -104,21 +104,26 @@ def createGame():
     else:
         maxLength = int(maxLength)
 
-    limit = gameLimitText.get("1.0", "end-1c")
+    # limit = gameLimitText.get("1.0", "end-1c")
     gameMode = gmvariable.get()
-    
-    timeLimit = None
-    scoreLimit = None
 
-    if gameMode == "Score Limit":
-        scoreLimit = int(limit)
-    elif gameMode == "Time Limit":
-        limit = limit.split(":")
-        timeLimit = int(limit[0])*60 + int(limit[1])
-    else:
-        assert gameMode == "Limitless"
+
     
-    print(timeLimit)
+    timeLimit = timeLimitText.get("1.0", "end-1c")
+    scoreLimit = scoreLimitText.get("1.0", "end-1c")
+
+    if timeLimit == "N/A":
+        timeLimit = None
+    else:
+        limit = timeLimit.split(":")
+        timeLimit = int(limit[0])*60 + int(limit[1])
+    
+    if scoreLimit == "N/A":
+        scoreLimit = None
+    else:
+        scoreLimit = int(scoreLimit)
+    
+    # print(timeLimit)
     assert type(timeLimit) == type(1) or timeLimit == None
 
     g = game.makeGame(size,size,minWordLength=minLength, maxWordLength=maxLength, seed = seed, timeLimit=timeLimit, scoreLimit=scoreLimit)
