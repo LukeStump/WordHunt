@@ -21,7 +21,7 @@ leaderboardgui.title("Leaderboard")
 
 "Get data from game"
 seed = "test_seed"
-dict = leaderboard.d
+dict = leaderboard.sorted_dict
 
 "GUI"
 #Title
@@ -36,6 +36,6 @@ score_list.pack(side=tk.TOP, pady=10)
 
 #Add scores to list
 for i in dict:
-    score_list.insert(END,i + " " + dict[i])
+    score_list.insert(END,i + " " + str(dict[i]))
 leaderboardgui.mainloop()
 

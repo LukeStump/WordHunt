@@ -9,12 +9,14 @@ for line in infile: #get each line from leaderboard.txt
     data = line.split() #split the data of each line
 
     if data[0] == (current_seed): #if the seed in the line matches the seed of the current game
-        d[data[1]] = data[2] #add player and score to dictionary
+        d[data[1]] = int(data[2]) #add player and score to dictionary
 
-#FIX THIS
+#Sort scores by highest
 sorted_dict = {}
-for key in sorted(d, key=sorted_dict.get):
+for key in sorted(d, key=d.get, reverse=True): #Sorts in descending order
     sorted_dict[key] = d[key]
+
+
 "Testing to see if the code works"
 for i in sorted_dict:
     print(i, sorted_dict[i]) #print all the scores in the window
