@@ -1,9 +1,11 @@
 #written on a separate file for now
 import board 
 import game
+import time
 import tkinter as tk
 from tkinter import *
 from tkinter import messagebox
+from threading import *
 root = tk.Tk() #main
 
 w = 1300
@@ -27,7 +29,7 @@ word_frame.pack(side=tk.RIGHT, expand=True, fill=tk.BOTH)
 #init
 gameBoard = None
 g = None
-
+timerActive = False
 
 def enterWord(word):
     """ called when the player enters a word
@@ -51,17 +53,18 @@ def enterWord(word):
 def update():
     """ called to update timer and word lists
     """
-    # update score
-    score = g.score
-    score_dis.config(text=f"Score: {score}")
+    if g != None:
+        # update score
+        score = g.score
+        score_dis.config(text=f"Score: {score}")
 
-    # update timer
-    time = g.timer.get_time()
-    time_dis.config(text=time)
+        # update timer
+        time = g.timer.get_time()
+        time_dis.config(text=time)
 
-    # update word_list
-    word_list.delete(0,END)
-    word_list.insert(END,*g.correctWords)
+        # update word_list
+        word_list.delete(0,END)
+        word_list.insert(END,*g.correctWords)
     pass
 
 def generateSeed():
@@ -155,6 +158,18 @@ def resetSettings():
     minLengthText.insert(tk.END, "3")
     maxLengthText.delete("1.0","end")
 
+def startButton(event=None):
+    global timerActive
+    createGame()
+    timerActive = True
+    t1=Thread(target=timeThread)
+    t1.start()
+
+def timeThread():
+    while(timerActive):
+        update()
+        time.sleep(1)
+
 #word header for score and time
 word_header_frame = tk.Frame(master=word_frame, bg="#9fbded")
 word_header_frame.pack(side=tk.TOP, fill=tk.BOTH)
@@ -207,7 +222,7 @@ settings_frame.columnconfigure(3, weight=1)
 settings_frame.rowconfigure(0, weight=1)
 
 #start game
-startGame = Button(settings_frame, text="START GAME", font=('Arial',28), command=createGame) #Generates a random seed
+startGame = Button(settings_frame, text="START GAME", font=('Arial',28), command=startButton) #Generates a random seed
 startGame.grid(row=1, columnspan=4, pady=10)
 
 solve = Button(settings_frame, text="Solve board", font=('Arial',20), command=solveBoard) #Generates a random seed
