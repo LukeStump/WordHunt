@@ -14,6 +14,7 @@ x = (screen_width/2) - (w/2)
 y = (screen_height/2) - (h/2)
 root.geometry('%dx%d+%d+%d' % (w, h, x, y)) #window size
 root.title("Word Hunt")
+root.resizable(False, False)
 
 settings_frame = tk.Frame(master=root, bg="#9fbded")
 settings_frame.pack(side=tk.LEFT, expand=True, fill=tk.BOTH)
@@ -145,7 +146,6 @@ def setup_board():
     global gameBoard
     gameBoard = board.makeBoard("X"*16,4,4)
     updateBoard()
-    messagebox.showwarning("Warning","Do NOT resize the game window.")
 
 def resetSettings():
     seedText.delete("1.0","end")
