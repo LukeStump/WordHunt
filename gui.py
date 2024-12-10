@@ -32,6 +32,7 @@ word_frame.pack(side=tk.RIGHT, expand=True, fill=tk.BOTH)
 gameBoard = None
 g = None
 timerActive = False
+outfile = open("leaderboard.txt","w", encoding='utf-8')
 
 def enterWord(word):
     """ called when the player enters a word
@@ -81,6 +82,7 @@ def generateSeed():
     # TODO put new seed in gui
     seedText.delete("1.0","end")
     seedText.insert(tk.END, newSeed)
+    currentSeed = newSeed
     pass
 
 def createGame():
@@ -183,7 +185,6 @@ def checkEndGame():
     pass
     return True
 
-"""GUI"""
 #word header for score and time
 word_header_frame = tk.Frame(master=word_frame, bg="#9fbded")
 word_header_frame.pack(side=tk.TOP, fill=tk.BOTH)
@@ -312,11 +313,11 @@ reset.grid(row=11, columnspan=4, pady=10)
 
 settings_frame.rowconfigure(12, weight=2)
 
-g.timer.start_time()
-
 def submitButton(event=None):
     enterWord(input.get("1.0", "end-1c"))
 
-input.bind("<Return>", leaderboardGui.openNewWindow) 
+input.bind("<Return>", submitButton) 
+
+#outfile.write(g.seed + " Anonymous " + g.score) #Write to leaderboard.txt
 
 root.mainloop()
